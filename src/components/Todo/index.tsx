@@ -101,7 +101,7 @@ export const Todo = ({ todo, index, totalTodos }: TodoProps) => {
             className="sr-only"
           />
           <span
-            className={cn('flex items-center justify-center h-6 w-6 border-2 rounded-md mr-2 transition-colors duration-200',
+            className={cn('flex items-center justify-center h-6 w-6 border-2 rounded-md transition-colors duration-200',
               todo.completed
                 ? 'bg-blue-500 border-blue-500'
                 : 'border-gray-300 hover:border-blue-400')}>
@@ -119,7 +119,7 @@ export const Todo = ({ todo, index, totalTodos }: TodoProps) => {
               onChange={(e) => setEditTitle(e.target.value)}
               onBlur={handleEditSave}
               onKeyDown={handleKeyDown}
-              className="w-full px-2 py-1 outline-none shadow-none focus:ring-0 border-b border-blue-500 ml-2"
+              className="w-full outline-none shadow-none focus:ring-0 border-b border-blue-500"
             />
           ) : (
             <span
