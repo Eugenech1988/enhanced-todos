@@ -1,76 +1,75 @@
-# React + TypeScript + Vite
+ # Enhanced Todos
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Enhanced Todos is a modern, feature-rich todo list application built with React and TypeScript. This application provides an intuitive interface for managing your daily tasks with advanced functionality including filtering, search, and persistent storage.
 
-Currently, two official plugins are available:
+## Technologies Used
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- **React** - A JavaScript library for building user interfaces
+- **TypeScript** - A typed superset of JavaScript that compiles to plain JavaScript
+- **Vite** - A fast build tool for modern web projects
+- **Tailwind CSS** - A utility-first CSS framework for rapid UI development
+- **Lucide React** - A collection of beautiful SVG icons for React
+- **clsx** - A utility for constructing className strings conditionally
+- **tailwind-merge** - A utility for merging Tailwind CSS classes with conflict resolution
 
-## React Compiler
+## Installation
 
-The React Compiler is enabled on this template. See [this documentation](https://react.dev/learn/react-compiler) for more information.
+To get started with Enhanced Todos, follow these steps:
 
-Note: This will impact Vite dev & build performances.
+1. Clone the repository:
+   ```bash
+   git clone <repository-url>
+   cd enhanced-todos
+   ```
 
-## Expanding the ESLint configuration
+2. Install dependencies:
+   ```bash
+   bun install
+   # or
+   npm install
+   ```
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+3. Start the development server:
+   ```bash
+   bun run dev
+   # or
+   npm run dev
+   ```
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+4. Open your browser and navigate to `http://localhost:5173` to view the application.
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+## Available Scripts
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+In the project directory, you can run:
+
+- `bun run dev` - Runs the app in development mode
+- `bun run build` - Builds the app for production
+- `bun run lint` - Lints the codebase
+- `bun run preview` - Locally previews the production build
+- `bun run format` - Formats the codebase with Prettier
+- `bun run format:check` - Checks if the codebase is formatted correctly
+
+## Features
+
+- Add, edit, and delete todos
+- Mark todos as complete/incomplete
+- Filter todos (All, Active, Completed)
+- Search through todos
+- Responsive design that works on all device sizes
+- Dark/light mode support
+- Local storage persistence to save your todos between sessions
+
+## Project Structure
+
 ```
-
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
-
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+src/
+├── components/     # Reusable UI components
+│   ├── Todo/       # Individual todo item component
+│   ├── TodoList/   # List of todo items component
+│   └── TodoActions/ # Actions panel component
+├── context/        # React context providers
+├── utils/          # Utility functions
+├── App.tsx         # Main application component
+├── main.tsx        # Entry point of the application
+└── index.css       # Global styles
 ```
-# enhanced-todos
