@@ -49,9 +49,9 @@ export const Todo = ({todo, index, totalTodos}: TodoProps) => {
               'block truncate text-gray-800',
               todo.completed && 'line-through text-red-500'
             )}
-            title={todo.title}
+            title={todo.title || ''}
           >
-            {todo.title}
+            {todo.title || ''}
           </span>
         </div>
         <button

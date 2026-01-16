@@ -1,5 +1,5 @@
 import { useTodo } from '@/context/todoContext';
-import { Activity, useActionState } from 'react';
+import { useActionState } from 'react';
 import { cn } from '@/utils';
 
 type State = {
@@ -13,7 +13,7 @@ const initialState: State = {
 };
 
 export const AddTodo = () => {
-  const {addTodo} = useTodo();
+  const { addTodo } = useTodo();
 
   async function addTodoAction(_prevState: State, formData: FormData): Promise<State> {
     const inputValue = formData.get('inputValue') as string;
@@ -58,11 +58,11 @@ export const AddTodo = () => {
           {isPending ? 'Adding...' : 'Add Todo'}
         </button>
       </div>
-      <Activity mode={state.error ? 'visible' : 'hidden'}>
-        <p className={cn(state.error ? 'block' : 'hidden', 'mt-2 text-red-500 text-sm')}>
+      <div className={state.error ? 'block' : 'hidden'}>
+        <p className={cn('mt-2 text-red-500 text-sm')}>
           {state.error}
         </p>
-      </Activity>
+      </div>
     </form>
   );
 };

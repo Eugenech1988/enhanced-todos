@@ -1,22 +1,21 @@
+import { useTodo } from '@/context/todoContext';
 import { useRef } from 'react';
 import { cn, debounce } from '@/utils';
 import { Search } from 'lucide-react';
 
 export const SearchTodos = () => {
+  const { setSearchQuery } = useTodo();
   const inputRef = useRef<HTMLInputElement>(null);
-  const searchQueryRef = useRef('');
-
-  const debouncedSearch = useRef(
+  const debouncedSetSearchQuery = useRef(
     debounce(() => {
       if (inputRef.current) {
-        searchQueryRef.current = inputRef.current.value;
-        console.log('Search query updated:', searchQueryRef.current); // здесь можно делать поиск
+        setSearchQuery(inputRef.current.value);
       }
     }, 300)
   );
 
   const handleChange = () => {
-    debouncedSearch.current();
+    debouncedSetSearchQuery.current();
   };
 
   return (
@@ -25,7 +24,7 @@ export const SearchTodos = () => {
         <input
           ref={inputRef}
           type="text"
-          defaultValue={searchQueryRef.current}
+          defaultValue=""
           onChange={handleChange}
           placeholder="Search todos..."
           className={cn(

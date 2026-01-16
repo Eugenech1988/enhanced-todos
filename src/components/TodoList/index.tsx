@@ -6,7 +6,9 @@ export const TodoList = () => {
 
   // Filter todos based on search query
   const filteredTodos = todos.filter(todo =>
-    todo.title.toLowerCase().includes(searchQuery.toLowerCase())
+    todo.title && searchQuery
+      ? todo.title.toLowerCase().includes(searchQuery.toLowerCase())
+      : true
   );
 
   return (
