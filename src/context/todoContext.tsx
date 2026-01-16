@@ -14,6 +14,8 @@ type TTodoContextValue = {
   removeTodo: (id: string) => void;
   setSearchQuery: (query: string) => void;
   searchQuery: string;
+  filter: 'all' | 'active' | 'completed';
+  setFilter: (filter: 'all' | 'active' | 'completed') => void;
 };
 
 const defaultTodoContext: TTodoContextValue = {
@@ -23,6 +25,8 @@ const defaultTodoContext: TTodoContextValue = {
   removeTodo: () => {},
   setSearchQuery: () => {},
   searchQuery: '',
+  filter: 'all',
+  setFilter: () => {},
 };
 
 const defaultValue: TTodo[] = [
@@ -36,6 +40,7 @@ const TodoContext = createContext<TTodoContextValue>(defaultTodoContext);
 export function TodoContextProvider({ children }: { children: ReactNode }) {
   const [todos, setTodos] = useState<TTodo[]>(defaultValue);
   const [searchQuery, setSearchQuery] = useState('');
+  const [filter, setFilter] = useState<'all' | 'active' | 'completed'>('all');
 
   function addTodo(title: string) {
     setTodos((prev) => [
@@ -72,6 +77,8 @@ export function TodoContextProvider({ children }: { children: ReactNode }) {
         removeTodo,
         setSearchQuery,
         searchQuery,
+        filter,
+        setFilter,
       }}
     >
       {children}

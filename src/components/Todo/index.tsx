@@ -34,12 +34,12 @@ export const Todo = ({todo, index, totalTodos}: TodoProps) => {
             className="sr-only"
           />
           <span
-            className={cn('flex items-center justify-center h-5 w-5 border-2 rounded-md mr-2 transition-colors duration-200',
+            className={cn('flex items-center justify-center h-6 w-6 border-2 rounded-md mr-2 transition-colors duration-200',
               todo.completed
                 ? 'bg-blue-500 border-blue-500'
                 : 'border-gray-300 hover:border-blue-40')}>
             {todo.completed && (
-              <Check size={12} color="white"/>
+              <Check size={18} color="white"/>
             )}
           </span>
         </label>
