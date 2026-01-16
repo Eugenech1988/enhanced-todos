@@ -1,11 +1,13 @@
-import { createContext, useContext, useState, type ReactNode } from 'react';
+import { createContext, useContext, useState, useEffect, type ReactNode } from 'react';
 
 export type TTodo = {
   id: string;
   title: string;
-  createdAt: Date;
+  createdAt: Date | string;
   completed: boolean;
 };
+
+export type TFilters = 'all' | 'active' | 'completed';
 
 type TTodoContextValue = {
   todos: TTodo[];
@@ -30,17 +32,36 @@ const defaultTodoContext: TTodoContextValue = {
 };
 
 const defaultValue: TTodo[] = [
-  { id: crypto.randomUUID(), title: 'Learn React', createdAt: new Date(), completed: false },
-  { id: crypto.randomUUID(), title: 'Learn TypeScript', createdAt: new Date(), completed: true },
-  { id: crypto.randomUUID(), title: 'Build a Todo App', createdAt: new Date(), completed: false },
+  { id: crypto.randomUUID(), title: 'Learn React', createdAt: new Date().toISOString(), completed: false },
+  { id: crypto.randomUUID(), title: 'Learn TypeScript', createdAt: new Date().toISOString(), completed: true },
+  { id: crypto.randomUUID(), title: 'Build a Todo App', createdAt: new Date().toISOString(), completed: false },
 ];
 
 const TodoContext = createContext<TTodoContextValue>(defaultTodoContext);
 
 export function TodoContextProvider({ children }: { children: ReactNode }) {
-  const [todos, setTodos] = useState<TTodo[]>(defaultValue);
+ const [todos, setTodos] = useState<TTodo[]>(() => {
+    const savedTodos = sessionStorage.getItem('todos');
+    if (savedTodos) {
+      const parsedTodos = JSON.parse(savedTodos);
+      return parsedTodos.map((todo: TTodo) => ({
+        ...todo,
+        createdAt: new Date(todo.createdAt),
+      }));
+    }
+    return defaultValue.map(todo => ({
+      ...todo,
+      createdAt: new Date(todo.createdAt),
+    }));
+  });
+  
   const [searchQuery, setSearchQuery] = useState('');
-  const [filter, setFilter] = useState<'all' | 'active' | 'completed'>('all');
+  const [filter, setFilter] = useState<TFilters>('all');
+
+  // Save todos to sessionStorage whenever todos change
+  useEffect(() => {
+    sessionStorage.setItem('todos', JSON.stringify(todos));
+  }, [todos]);
 
   function addTodo(title: string) {
     setTodos((prev) => [
@@ -48,7 +69,7 @@ export function TodoContextProvider({ children }: { children: ReactNode }) {
       {
         id: crypto.randomUUID(),
         title,
-        createdAt: new Date(),
+        createdAt: new Date().toISOString(),
         completed: false,
       },
     ]);

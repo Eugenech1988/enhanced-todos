@@ -32,10 +32,23 @@
  - **Flexibility**: Refs allow direct DOM manipulation when needed, providing more control over input behavior
  - **Debouncing**: I can easily implement debounced search functionality by accessing the input value via ref after a delay
  - **Cleaner State Management**: For search functionality, I update state only after user stops typing, reducing unnecessary state updates
+## Why I Use Session Storage for Persistence
 
- ## Installation
+In this application, I chose to use sessionStorage for persisting todos between sessions for several important reasons:
 
- To get started with Enhanced Todos, follow these steps:
+- **Session-Based Storage**: Data persists throughout the browser tab session and is cleared when the tab is closed, which is ideal for temporary task management
+- **Automatic Cleanup**: Unlike localStorage, data doesn't remain indefinitely, which prevents accumulation of old tasks that are no longer relevant
+- **Security**: Data is isolated to the specific browser tab and doesn't persist across different tabs or browser sessions
+- **Browser Compatibility**: sessionStorage is supported across all modern browsers and provides a simple API
+- **No Server Dependencies**: Allows the application to maintain state without requiring backend services
+- **Performance**: Provides fast read/write operations for client-side data management
+
+While localStorage would provide permanent storage, sessionStorage strikes the right balance between persistence and automatic cleanup for a todo application.
+
+## Installation
+
+To get started with Enhanced Todos, follow these steps:
+
 
  1. Clone the repository:
     ```bash
@@ -76,18 +89,14 @@
  - Mark todos as complete/incomplete
  - Search through todos
  - Responsive design that works on all device sizes
- - Local storage persistence to save your todos between sessions
+ - Session storage persistence to save your todos between sessions
  - Dynamic imports for optimized loading (where beneficial)
  
  ## Project Structure
  
  ```
  src/
- ├── components/     # Reusable UI components
- │   ├── AddTodo/    # Component for adding new todos
- │   ├── SearchTodos/ # Component for searching todos
- │   ├── Todo/       # Individual todo item component
- │   └── TodoList/   # List of todo items component
+ ├── components/     # Project components
  ├── context/        # React context providers
  ├── utils/          # Utility functions
  ├── App.tsx         # Main application component
