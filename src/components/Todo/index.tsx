@@ -119,7 +119,7 @@ export const Todo = ({ todo, index, totalTodos }: TodoProps) => {
               onChange={(e) => setEditTitle(e.target.value)}
               onBlur={handleEditSave}
               onKeyDown={handleKeyDown}
-              className="w-full px-2 py-1 border border-blue-400 rounded outline-none"
+              className="w-full px-2 py-1 outline-none shadow-none focus:ring-0 border-b border-blue-500 ml-2"
             />
           ) : (
             <span
