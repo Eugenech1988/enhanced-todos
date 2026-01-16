@@ -3,7 +3,6 @@ import { Trash2, Check, GripVertical } from 'lucide-react';
 import { cn } from '@/utils';
 import { useTodoItemDnD } from '@/hooks/useTodoDnD';
 import { useState, useRef, useEffect } from 'react';
-import { motion } from 'framer-motion';
 
 type TodoProps = {
   todo: TTodo;
@@ -76,13 +75,8 @@ export const Todo = ({ todo, index, totalTodos }: TodoProps) => {
   };
 
   return (
-    <motion.li
+    <li
       ref={elementRef}
-      layout
-      initial={{ opacity: 0, y: -10 }}
-      animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, y: -10 }}
-      transition={{ duration: 0.3 }}
       className={cn(
         'p-3 relative',
         'hover:bg-gray-50',
@@ -95,7 +89,7 @@ export const Todo = ({ todo, index, totalTodos }: TodoProps) => {
 
       <div className="flex items-center space-x-3">
         {filter === 'all' && (
-          <div ref={dragHandleRef} className="cursor-grab hover:text-gray-600 text-gray-400">
+          <div ref={dragHandleRef} className="cursor-grab hover:text-gray-600 text-gray-40">
             <GripVertical size={20} />
           </div>
         )}
@@ -148,6 +142,6 @@ export const Todo = ({ todo, index, totalTodos }: TodoProps) => {
           <Trash2 size={20} />
         </button>
       </div>
-    </motion.li>
+    </li>
   );
 };
