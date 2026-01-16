@@ -1,6 +1,7 @@
 import { type TTodo, useTodo } from '@/context/todoContext.tsx';
-import { Trash2, Check } from 'lucide-react';
+import { Trash2, Check, GripVertical } from 'lucide-react';
 import { cn } from '@/utils';
+import { useTodoItemDnD } from '@/hooks/useTodoDnD';
 
 type TodoProps = {
   todo: TTodo;
@@ -8,8 +9,14 @@ type TodoProps = {
   totalTodos: number;
 };
 
-export const Todo = ({todo, index, totalTodos}: TodoProps) => {
-  const {toggleTodo, removeTodo} = useTodo();
+export const Todo = ({ todo, index, totalTodos }: TodoProps) => {
+  const { toggleTodo, removeTodo, filter } = useTodo();
+
+  const { elementRef, dragHandleRef, isDragging, closestEdge } = useTodoItemDnD({
+    todo,
+    index,
+    filter
+  });
 
   const handleToggle = () => {
     toggleTodo(todo.id);
@@ -20,12 +27,24 @@ export const Todo = ({todo, index, totalTodos}: TodoProps) => {
   };
 
   return (
-    <li className={cn(
-      'p-3',
-      'hover:bg-gray-50',
-      index !== totalTodos - 1 && 'border-b border-gray-200'
-    )}>
+    <li
+      ref={elementRef}
+      className={cn(
+        'p-3 relative',
+        'hover:bg-gray-50',
+        index !== totalTodos - 1 && 'border-b border-gray-200',
+        isDragging && 'opacity-70'
+      )}
+    >
+      {closestEdge === 'top' && <div className="absolute top-0 left-0 right-0 h-0.5 bg-blue-500" />}
+      {closestEdge === 'bottom' && <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-blue-500" />}
+
       <div className="flex items-center space-x-3">
+        {filter === 'all' && (
+          <div ref={dragHandleRef} className="cursor-grab hover:text-gray-600 text-gray-400">
+            <GripVertical size={20} />
+          </div>
+        )}
         <label className="flex items-center cursor-pointer">
           <input
             type="checkbox"
@@ -39,7 +58,7 @@ export const Todo = ({todo, index, totalTodos}: TodoProps) => {
                 ? 'bg-blue-500 border-blue-500'
                 : 'border-gray-300 hover:border-blue-40')}>
             {todo.completed && (
-              <Check size={18} color="white"/>
+              <Check size={18} color="white" />
             )}
           </span>
         </label>
@@ -59,7 +78,7 @@ export const Todo = ({todo, index, totalTodos}: TodoProps) => {
           className="text-red-500 hover:text-red-700 transition-colors duration-200 cursor-pointer"
           aria-label="Delete task"
         >
-          <Trash2 size={20}/>
+          <Trash2 size={20} />
         </button>
       </div>
     </li>

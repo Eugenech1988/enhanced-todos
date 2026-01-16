@@ -18,17 +18,19 @@ type TTodoContextValue = {
   searchQuery: string;
   filter: 'all' | 'active' | 'completed';
   setFilter: (filter: 'all' | 'active' | 'completed') => void;
+  reorderTodos: (startIndex: number, endIndex: number) => void;
 };
 
 const defaultTodoContext: TTodoContextValue = {
   todos: [],
-  addTodo: () => {},
-  toggleTodo: () => {},
-  removeTodo: () => {},
-  setSearchQuery: () => {},
+  addTodo: () => { },
+  toggleTodo: () => { },
+  removeTodo: () => { },
+  setSearchQuery: () => { },
   searchQuery: '',
   filter: 'all',
-  setFilter: () => {},
+  setFilter: () => { },
+  reorderTodos: () => { },
 };
 
 const defaultValue: TTodo[] = [
@@ -40,7 +42,7 @@ const defaultValue: TTodo[] = [
 const TodoContext = createContext<TTodoContextValue>(defaultTodoContext);
 
 export function TodoContextProvider({ children }: { children: ReactNode }) {
- const [todos, setTodos] = useState<TTodo[]>(() => {
+  const [todos, setTodos] = useState<TTodo[]>(() => {
     const savedTodos = sessionStorage.getItem('todos');
     if (savedTodos) {
       const parsedTodos = JSON.parse(savedTodos);
@@ -54,7 +56,7 @@ export function TodoContextProvider({ children }: { children: ReactNode }) {
       createdAt: new Date(todo.createdAt),
     }));
   });
-  
+
   const [searchQuery, setSearchQuery] = useState('');
   const [filter, setFilter] = useState<TFilters>('all');
 
@@ -89,6 +91,15 @@ export function TodoContextProvider({ children }: { children: ReactNode }) {
     setTodos((prev) => prev.filter((todo) => todo.id !== id));
   }
 
+  function reorderTodos(startIndex: number, endIndex: number) {
+    setTodos((prev) => {
+      const result = Array.from(prev);
+      const [removed] = result.splice(startIndex, 1);
+      result.splice(endIndex, 0, removed);
+      return result;
+    });
+  }
+
   return (
     <TodoContext.Provider
       value={{
@@ -96,6 +107,7 @@ export function TodoContextProvider({ children }: { children: ReactNode }) {
         addTodo,
         toggleTodo,
         removeTodo,
+        reorderTodos,
         setSearchQuery,
         searchQuery,
         filter,

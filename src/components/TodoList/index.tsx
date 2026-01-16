@@ -1,8 +1,9 @@
 import { useTodo } from '@/context/todoContext.tsx';
 import { Todo } from '@/components/Todo';
+import { useTodoMonitor } from '@/hooks/useTodoDnD';
 
 export const TodoList = () => {
-  const { todos, searchQuery, filter } = useTodo();
+  const { todos, searchQuery, filter, reorderTodos } = useTodo();
 
   const filteredTodos = todos.filter(todo => {
     const matchesSearch = searchQuery
@@ -17,6 +18,8 @@ export const TodoList = () => {
       return matchesSearch;
     }
   });
+
+  useTodoMonitor(reorderTodos);
 
   return (
     <div className="bg-white rounded-lg shadow-md p-6">
