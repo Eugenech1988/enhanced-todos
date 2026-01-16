@@ -12,7 +12,7 @@ const initialState: State = {
   error: null
 };
 
-export const TodoActions = () => {
+export const AddTodo = () => {
   const {addTodo} = useTodo();
 
   async function addTodoAction(_prevState: State, formData: FormData): Promise<State> {
@@ -33,7 +33,7 @@ export const TodoActions = () => {
   const [state, formAction, isPending] = useActionState(addTodoAction, initialState);
 
   return (
-    <form action={formAction} className="mb-8">
+    <form action={formAction} className="mb-4">
       <div className="flex flex-col sm:flex-row gap-2">
         <div className="relative flex-1">
           <input

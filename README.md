@@ -1,16 +1,17 @@
  # Enhanced Todos
-
-Enhanced Todos is a modern, feature-rich todo list application built with React and TypeScript. This application provides an intuitive interface for managing your daily tasks with advanced functionality including filtering, search, and persistent storage.
-
-## Technologies Used
-
-- **React** - A JavaScript library for building user interfaces
-- **TypeScript** - A typed superset of JavaScript that compiles to plain JavaScript
-- **Vite** - A fast build tool for modern web projects
-- **Tailwind CSS** - A utility-first CSS framework for rapid UI development
-- **Lucide React** - A collection of beautiful SVG icons for React
-- **clsx** - A utility for constructing className strings conditionally
-- **tailwind-merge** - A utility for merging Tailwind CSS classes with conflict resolution
+ 
+ Enhanced Todos is a modern, feature-rich todo list application built with React and TypeScript. This application provides an intuitive interface for managing your daily tasks with advanced functionality including filtering, search, drag-and-drop reordering, and persistent storage.
+ 
+ ## Technologies Used
+ 
+ - **React** - A JavaScript library for building user interfaces
+ - **TypeScript** - A typed superset of JavaScript that compiles to plain JavaScript
+ - **Vite** - A fast build tool for modern web projects
+ - **Tailwind CSS** - A utility-first CSS framework for rapid UI development
+ - **Lucide React** - A collection of beautiful SVG icons for React
+ - **clsx** - A utility for constructing className strings conditionally
+ - **tailwind-merge** - A utility for merging Tailwind CSS classes with conflict resolution
+ - **@atlaskit/pragmatic-drag-and-drop** - A drag and drop toolkit for building accessible, robust drag and drop experiences
 
 ## Installation
 
@@ -51,12 +52,11 @@ In the project directory, you can run:
 
 ## Features
 
-- Add, edit, and delete todos
+- Add and delete todos
 - Mark todos as complete/incomplete
-- Filter todos (All, Active, Completed)
 - Search through todos
+- Drag and drop to reorder todos
 - Responsive design that works on all device sizes
-- Dark/light mode support
 - Local storage persistence to save your todos between sessions
 
 ## Project Structure
