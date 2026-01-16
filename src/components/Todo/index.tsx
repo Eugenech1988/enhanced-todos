@@ -126,7 +126,7 @@ export const Todo = ({ todo, index, totalTodos }: TodoProps) => {
               onClick={handleEditClick}
               className={cn(
                 'block truncate text-gray-800 cursor-text hover:bg-gray-100 px-1 -mx-1 rounded',
-                todo.completed && 'line-through text-red-500'
+                todo.completed && 'line-through text-blue-500'
               )}
               title={todo.title || ''}
             >

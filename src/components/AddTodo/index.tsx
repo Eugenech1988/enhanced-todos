@@ -16,25 +16,36 @@ export const AddTodo = () => {
   const { addTodo } = useTodo();
   const [isFocused, setIsFocused] = useState(false);
   const [needsShakeAnimation, setNeedsShakeAnimation] = useState(false);
+  const [errorDismissed, setErrorDismissed] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
 
   async function addTodoAction(_prevState: State, formData: FormData): Promise<State> {
     const inputValue = formData.get('inputValue') as string;
 
     if (!inputValue || !inputValue.trim()) {
+      setErrorDismissed(false);
       return { inputValue, error: 'Task title is required' };
     }
 
     if (inputValue.length > 100) {
+      setErrorDismissed(false);
       return { inputValue, error: 'Task title is too long' };
     }
 
     addTodo(inputValue.trim());
+    setErrorDismissed(false);
     return { inputValue: '', error: null };
   }
 
   const [state, formAction, isPending] = useActionState(addTodoAction, initialState);
-  const showError = state.error && !isFocused;
+  const showError = state.error && !isFocused && !errorDismissed;
+
+  const handleFocus = () => {
+    setIsFocused(true);
+    if (state.error) {
+      setErrorDismissed(true);
+    }
+  };
 
   const handleBlur = () => {
     setIsFocused(false);
@@ -59,7 +70,7 @@ export const AddTodo = () => {
             ref={inputRef}
             defaultValue={initialState.inputValue}
             placeholder=" "
-            onFocus={() => setIsFocused(true)}
+            onFocus={handleFocus}
             onBlur={handleBlur}
             className={cn(
               'peer w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-blue-500 transition-all placeholder-transparent',
