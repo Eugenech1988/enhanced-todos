@@ -1,5 +1,5 @@
 import { useTodo } from '@/context/todoContext';
-import { Activity, useActionState, useState } from 'react';
+import { Activity, useActionState, useState, useRef } from 'react';
 import { cn } from '@/utils';
 
 type State = {
@@ -16,6 +16,7 @@ export const AddTodo = () => {
   const { addTodo } = useTodo();
   const [isFocused, setIsFocused] = useState(false);
   const [needsShakeAnimation, setNeedsShakeAnimation] = useState(false);
+  const inputRef = useRef<HTMLInputElement>(null);
 
   async function addTodoAction(_prevState: State, formData: FormData): Promise<State> {
     const inputValue = formData.get('inputValue') as string;
@@ -35,14 +36,15 @@ export const AddTodo = () => {
   const [state, formAction, isPending] = useActionState(addTodoAction, initialState);
   const showError = state.error && !isFocused;
 
-  // Функция для обработки расфокуса
   const handleBlur = () => {
     setIsFocused(false);
-    const inputElement = document.getElementById('add-todo-input') as HTMLInputElement;
-    const currentValue = inputElement?.value || '';
+    const currentValue = inputRef.current?.value || '';
     if (!currentValue || !currentValue.trim()) {
       setNeedsShakeAnimation(true);
-      setTimeout(() => setNeedsShakeAnimation(false), 500); // Сброс анимации после её завершения
+      // Сброс анимации через следующий тик
+      requestAnimationFrame(() => {
+        setNeedsShakeAnimation(false);
+      });
     }
   };
 
@@ -54,6 +56,7 @@ export const AddTodo = () => {
             type="text"
             id="add-todo-input"
             name="inputValue"
+            ref={inputRef}
             defaultValue={initialState.inputValue}
             placeholder=" "
             onFocus={() => setIsFocused(true)}
