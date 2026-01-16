@@ -8,7 +8,7 @@ type FilterDropdownProps = {
   className?: string;
 };
 export const FilterDropdown = ({className}: FilterDropdownProps) => {
-  const {filter, setFilter} = useTodo();
+  const { filter, setFilter } = useTodo();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
   const toggleDropdown = () => {

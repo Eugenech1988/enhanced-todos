@@ -12,7 +12,12 @@
  - **clsx** - A utility for constructing className strings conditionally
  - **tailwind-merge** - A utility for merging Tailwind CSS classes with conflict resolution
  - **@atlaskit/pragmatic-drag-and-drop** - A drag and drop toolkit for building accessible, robust drag and drop experiences
+ - **React Activity** - A state management library for handling complex UI interactions declaratively
 
+ ## Why I Use React Activity
+ 
+ React Activity was used to manage UI states declaratively, reduce conditional logic in JSX, and provide a scalable and predictable approach for complex UI flows.
+ 
  ## Why I Use Tailwind CSS
 
  I use Tailwind CSS because it enables rapid UI development with its utility-first approach. Instead of writing custom CSS, I can compose existing utility classes to build custom designs directly in JSX. This approach offers several advantages:
