@@ -4,7 +4,7 @@
  
  ## Technologies Used
  
- - **React** - A JavaScript library for building user interfaces
+ - **React** - A JavaScript library for building user interfaces (including React Activity from React 19.2 for declarative UI state management)
  - **TypeScript** - A typed superset of JavaScript that compiles to plain JavaScript
  - **Vite** - A fast build tool for modern web projects
  - **Tailwind CSS** - A utility-first CSS framework for rapid UI development
@@ -12,12 +12,7 @@
  - **clsx** - A utility for constructing className strings conditionally
  - **tailwind-merge** - A utility for merging Tailwind CSS classes with conflict resolution
  - **@atlaskit/pragmatic-drag-and-drop** - A drag and drop toolkit for building accessible, robust drag and drop experiences
- - **React Activity** - A state management library for handling complex UI interactions declaratively
 
- ## Why I Use React Activity
- 
- React Activity was used to manage UI states declaratively, reduce conditional logic in JSX, and provide a scalable and predictable approach for complex UI flows.
- 
  ## Why I Use Tailwind CSS
 
  I use Tailwind CSS because it enables rapid UI development with its utility-first approach. Instead of writing custom CSS, I can compose existing utility classes to build custom designs directly in JSX. This approach offers several advantages:
@@ -28,6 +23,10 @@
  - **Responsive Design**: Built-in responsive prefixes make mobile-first development easier
  - **Customization**: Configure design tokens to match brand guidelines
 
+ ## Why I Use React Activity from React 19.2
+ 
+ React Activity was used to manage UI states declaratively, reduce conditional logic in JSX, and provide a scalable and predictable approach for complex UI flows.
+ 
  ## Why I Control Inputs with Refs and State Actions
 
  In this application, I control inputs using refs and state actions rather than controlled components for specific reasons:
