@@ -111,3 +111,17 @@ src/
 └── index.css             # Global styles
 ```
 
+## Why I Chose Framer Motion for Animations
+
+I selected Framer Motion for implementing animations in this application instead of managing animations through component state for several compelling reasons:
+
+- **Declarative Animation Syntax**: Framer Motion provides an intuitive, declarative way to define animations using props like `initial`, `animate`, and `exit`, making the code more readable and maintainable.
+- **Performance Optimization**: Framer Motion leverages hardware acceleration and optimizes animations at a lower level than typical state-based animations, resulting in smoother 60fps animations.
+- **Advanced Animation Features**: It provides sophisticated features like spring physics, gesture handling, and layout animations that would be complex to implement manually with state.
+- **Animation Orchestration**: With `AnimatePresence`, it's easy to coordinate enter/exit animations for components that are being added or removed from the DOM, ensuring smooth transitions.
+- **Reduced State Complexity**: Using Framer Motion eliminates the need for additional component states to track animation phases, simplifying the component logic and reducing potential bugs.
+- **Layout Animations**: Framer Motion's `layout` prop allows elements to animate their position when the layout shifts (e.g., when a todo is removed), creating a polished user experience.
+- **Built-in Exit Animations**: The `exit` prop makes it simple to animate components out of the DOM when they're unmounted, which is particularly useful for the todo deletion flow.
+
+By using Framer Motion instead of state-based animations, the code remains clean and focused on business logic while offloading the complex animation calculations to a well-optimized library.
+
