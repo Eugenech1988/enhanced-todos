@@ -23,7 +23,7 @@ export const SearchTodos = () => {
   };
 
   return (
-    <div className="mb-4 flex flex-col sm:flex-row gap-4">
+    <div className="mb-4 flex flex-col sm:flex-row gap-2">
       <div className="relative flex-grow">
         <input
           ref={inputRef}
@@ -34,7 +34,7 @@ export const SearchTodos = () => {
           placeholder=" "
           required
           className={cn(
-            'peer w-full px-4 py-2 pl-10 border rounded-lg transition-all',
+            'peer w-full px-4 leading-[42px] pl-10 border rounded-lg transition-all',
             'border-gray-300 focus:border-blue-500 focus:outline-none',
             'invalid:animate-shake',
             inputValue ? 'border-blue-500' : ''
@@ -56,7 +56,7 @@ export const SearchTodos = () => {
             inputValue ? '-top-2.5 left-3 text-sm text-blue-500' : ''
           )}
         >
-          Search todos...
+          Search todos
         </label>
       </div>
 
