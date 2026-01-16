@@ -1,10 +1,10 @@
  # Enhanced Todos
-   
- Enhanced Todos is a modern, feature-rich todo list application built with React and TypeScript. This application provides an intuitive interface for managing your daily tasks with advanced functionality including filtering, search, and persistent storage.
+     
+ Enhanced Todos is a modern, feature-rich todo list application built with React and TypeScript. This application provides an intuitive interface for managing your daily tasks with advanced functionality including filtering, search, drag-and-drop reordering, and persistent storage.
  
  ## Technologies Used
  
- - **React** - A JavaScript library for building user interfaces (including React Activity from React 19.2 for declarative UI state management)
+ - **React** - A JavaScript library for building user interfaces
  - **TypeScript** - A typed superset of JavaScript that compiles to plain JavaScript
  - **Vite** - A fast build tool for modern web projects
  - **Tailwind CSS** - A utility-first CSS framework for rapid UI development
@@ -12,25 +12,21 @@
  - **clsx** - A utility for constructing className strings conditionally
  - **tailwind-merge** - A utility for merging Tailwind CSS classes with conflict resolution
  - **@atlaskit/pragmatic-drag-and-drop** - A drag and drop toolkit for building accessible, robust drag and drop experiences
-
+ 
  ## Why I Use Tailwind CSS
-
+ 
  I use Tailwind CSS because it enables rapid UI development with its utility-first approach. Instead of writing custom CSS, I can compose existing utility classes to build custom designs directly in JSX. This approach offers several advantages:
-
+ 
  - **Rapid Prototyping**: Build interfaces faster with ready-to-use utility classes
  - **Consistency**: Maintain consistent spacing, colors, and typography across the application
  - **Maintainability**: Reduce CSS bloat and eliminate unused styles
  - **Responsive Design**: Built-in responsive prefixes make mobile-first development easier
  - **Customization**: Configure design tokens to match brand guidelines
-
- ## Why I Use React Activity from React 19.2
- 
- React Activity was used to manage UI states declaratively, reduce conditional logic in JSX, and provide a scalable and predictable approach for complex UI flows.
  
  ## Why I Control Inputs with Refs and State Actions
-
+ 
  In this application, I control inputs using refs and state actions rather than controlled components for specific reasons:
-
+ 
  - **Performance**: Using refs avoids re-rendering components on every keystroke, which improves performance for large lists
  - **Avoid Unnecessary Re-renders**: Input elements don't re-render on every keystroke, preventing performance degradation
  - **Flexibility**: Refs allow direct DOM manipulation when needed, providing more control over input behavior
@@ -75,45 +71,43 @@ To get started with Enhanced Todos, follow these steps:
     ```
  
  4. Open your browser and navigate to `http://localhost:5173` to view the application.
- 
- ## Available Scripts
- 
- In the project directory, you can run:
- 
- - `bun run dev` - Runs the app in development mode
- - `bun run build` - Builds the app for production
- - `bun run lint` - Lints the codebase
- - `bun run preview` - Locally previews the production build
- - `bun run format` - Formats the codebase with Prettier
- - `bun run format:check` - Checks if the codebase is formatted correctly
- 
- ## Features
- 
- - Add and delete todos
- - Mark todos as complete/incomplete
- - Search through todos
- - Responsive design that works on all device sizes
- - Session storage persistence to save your todos between sessions
- - Dynamic imports for optimized loading (where beneficial)
- 
- ## Project Structure
- 
- ```
- src/
- ├── components/     # Project components
- ├── context/        # React context providers
- ├── utils/          # Utility functions
- ├── App.tsx         # Main application component
- ├── main.tsx        # Entry point of the application
- └── index.css       # Global styles
- ```
 
- ## Dynamic Imports Analysis
+## Available Scripts
+ 
+In the project directory, you can run:
+ 
+- `bun run dev` - Runs the app in development mode
+- `bun run build` - Builds the app for production
+- `bun run preview` - Locally previews the production build
+- `bun run format` - Formats the codebase with Prettier
+- `bun run format:check` - Checks if the codebase is formatted correctly
 
- After analyzing the project structure, I determined that dynamic imports are not strictly necessary for this application due to its small size and simple architecture. All components load simultaneously and are used on a single screen. However, dynamic imports could be beneficial in the future when:
+## Features
 
- - Adding routing functionality between different pages
- - Integrating heavy libraries or components
- - Implementing lazy loading for performance optimization
+- Add and delete todos
+- Mark todos as complete/incomplete
+- Search through todos with highlighted search terms
+- Filter todos (All, Active, Completed)
+- Drag and drop to reorder todos (when viewing all todos)
+- Responsive design that works on all device sizes
+- Session storage persistence to save your todos between sessions
 
- For the current state of the application, static imports are sufficient and maintain simplicity while keeping bundle size reasonable.
+## Project Structure
+
+```
+src/
+├── components/           # Reusable UI components
+│   ├── AddTodo/          # Component for adding new todos
+│   ├── FilterDropdown/   # Component for filtering todos
+│   ├── SearchTodos/      # Component for searching todos
+│   ├── Todo/             # Component for individual todo items
+│   └── TodoList/         # Component for displaying the list of todos
+├── context/              # React context providers
+├── hooks/                # Custom React hooks (e.g., drag-and-drop functionality)
+├── utils/                # Utility functions
+├── constants/            # Application constants
+├── App.tsx               # Main application component
+├── main.tsx              # Entry point of the application
+└── index.css             # Global styles
+```
+

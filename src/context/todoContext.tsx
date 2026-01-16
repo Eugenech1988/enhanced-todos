@@ -16,9 +16,10 @@ type TTodoContextValue = {
   removeTodo: (id: string) => void;
   setSearchQuery: (query: string) => void;
   searchQuery: string;
-  filter: 'all' | 'active' | 'completed';
-  setFilter: (filter: 'all' | 'active' | 'completed') => void;
+  filter: TFilters;
+  setFilter: (filter: TFilters) => void;
   reorderTodos: (startIndex: number, endIndex: number) => void;
+  updateTodo: (id: string, title: string) => void;
 };
 
 const defaultTodoContext: TTodoContextValue = {
@@ -26,6 +27,7 @@ const defaultTodoContext: TTodoContextValue = {
   addTodo: () => { },
   toggleTodo: () => { },
   removeTodo: () => { },
+  updateTodo: () => { },
   setSearchQuery: () => { },
   searchQuery: '',
   filter: 'all',
@@ -41,7 +43,7 @@ const defaultValue: TTodo[] = [
 
 const TodoContext = createContext<TTodoContextValue>(defaultTodoContext);
 
-export function TodoContextProvider({ children }: { children: ReactNode }) {
+export const TodoContextProvider = ({ children }: { children: ReactNode }) => {
   const [todos, setTodos] = useState<TTodo[]>(() => {
     const savedTodos = sessionStorage.getItem('todos');
     if (savedTodos) {
@@ -60,13 +62,12 @@ export function TodoContextProvider({ children }: { children: ReactNode }) {
   const [searchQuery, setSearchQuery] = useState('');
   const [filter, setFilter] = useState<TFilters>('all');
 
-  // Save todos to sessionStorage whenever todos change
   useEffect(() => {
     sessionStorage.setItem('todos', JSON.stringify(todos));
   }, [todos]);
 
-  function addTodo(title: string) {
-    setTodos((prev) => [
+  const addTodo = (title: string) => {
+    setTodos(prev => [
       ...prev,
       {
         id: crypto.randomUUID(),
@@ -75,30 +76,38 @@ export function TodoContextProvider({ children }: { children: ReactNode }) {
         completed: false,
       },
     ]);
-  }
+  };
 
-  function toggleTodo(id: string) {
-    setTodos((prev) =>
-      prev.map((todo) =>
+  const toggleTodo = (id: string) => {
+    setTodos(prev =>
+      prev.map(todo =>
         todo.id === id
           ? { ...todo, completed: !todo.completed }
           : todo
       )
     );
-  }
+  };
 
-  function removeTodo(id: string) {
-    setTodos((prev) => prev.filter((todo) => todo.id !== id));
-  }
+  const removeTodo = (id: string) => {
+    setTodos(prev => prev.filter(todo => todo.id !== id));
+  };
 
-  function reorderTodos(startIndex: number, endIndex: number) {
-    setTodos((prev) => {
+  const reorderTodos = (startIndex: number, endIndex: number) => {
+    setTodos(prev => {
       const result = Array.from(prev);
       const [removed] = result.splice(startIndex, 1);
       result.splice(endIndex, 0, removed);
       return result;
     });
-  }
+  };
+
+  const updateTodo = (id: string, title: string) => {
+    setTodos(prev =>
+      prev.map(todo =>
+        todo.id === id ? { ...todo, title } : todo
+      )
+    );
+  };
 
   return (
     <TodoContext.Provider
@@ -107,6 +116,7 @@ export function TodoContextProvider({ children }: { children: ReactNode }) {
         addTodo,
         toggleTodo,
         removeTodo,
+        updateTodo,
         reorderTodos,
         setSearchQuery,
         searchQuery,
@@ -117,8 +127,6 @@ export function TodoContextProvider({ children }: { children: ReactNode }) {
       {children}
     </TodoContext.Provider>
   );
-}
+};
 
-export function useTodo() {
-  return useContext(TodoContext);
-}
+export const useTodo = () => useContext(TodoContext);

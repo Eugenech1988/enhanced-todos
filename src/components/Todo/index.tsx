@@ -2,6 +2,7 @@ import { type TTodo, useTodo } from '@/context/todoContext.tsx';
 import { Trash2, Check, GripVertical } from 'lucide-react';
 import { cn } from '@/utils';
 import { useTodoItemDnD } from '@/hooks/useTodoDnD';
+import { useState, useRef, useEffect } from 'react';
 
 type TodoProps = {
   todo: TTodo;
@@ -10,13 +11,22 @@ type TodoProps = {
 };
 
 export const Todo = ({ todo, index, totalTodos }: TodoProps) => {
-  const { toggleTodo, removeTodo, filter } = useTodo();
+  const { toggleTodo, removeTodo, updateTodo, filter, searchQuery } = useTodo();
+  const [isEditing, setIsEditing] = useState(false);
+  const [editTitle, setEditTitle] = useState(todo.title);
+  const inputRef = useRef<HTMLInputElement>(null);
 
   const { elementRef, dragHandleRef, isDragging, closestEdge } = useTodoItemDnD({
     todo,
     index,
     filter
   });
+
+  useEffect(() => {
+    if (isEditing && inputRef.current) {
+      inputRef.current.focus();
+    }
+  }, [isEditing]);
 
   const handleToggle = () => {
     toggleTodo(todo.id);
@@ -26,6 +36,44 @@ export const Todo = ({ todo, index, totalTodos }: TodoProps) => {
     removeTodo(todo.id);
   };
 
+  const handleEditClick = () => {
+    setIsEditing(true);
+    setEditTitle(todo.title);
+  };
+
+  const handleEditSave = () => {
+    if (editTitle.trim()) {
+      updateTodo(todo.id, editTitle.trim());
+    } else {
+      setEditTitle(todo.title);
+    }
+    setIsEditing(false);
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter') {
+      handleEditSave();
+    } else if (e.key === 'Escape') {
+      setEditTitle(todo.title);
+      setIsEditing(false);
+    }
+  };
+
+  const renderTitle = () => {
+    if (!searchQuery || !todo.title) return todo.title;
+
+    const parts = todo.title.split(new RegExp(`(${searchQuery})`, 'gi'));
+    return parts.map((part, i) =>
+      part.toLowerCase() === searchQuery.toLowerCase() ? (
+        <span key={i} className="bg-yellow-200 text-gray-900 rounded-sm px-0.5">
+          {part}
+        </span>
+      ) : (
+        part
+      )
+    );
+  };
+
   return (
     <li
       ref={elementRef}
@@ -33,7 +81,7 @@ export const Todo = ({ todo, index, totalTodos }: TodoProps) => {
         'p-3 relative',
         'hover:bg-gray-50',
         index !== totalTodos - 1 && 'border-b border-gray-200',
-        isDragging && 'opacity-70'
+        isDragging && 'opacity-50'
       )}
     >
       {closestEdge === 'top' && <div className="absolute top-0 left-0 right-0 h-0.5 bg-blue-500" />}
@@ -63,15 +111,28 @@ export const Todo = ({ todo, index, totalTodos }: TodoProps) => {
           </span>
         </label>
         <div className="flex-1 min-w-0 mr-2">
-          <span
-            className={cn(
-              'block truncate text-gray-800',
-              todo.completed && 'line-through text-red-500'
-            )}
-            title={todo.title || ''}
-          >
-            {todo.title || ''}
-          </span>
+          {isEditing ? (
+            <input
+              ref={inputRef}
+              type="text"
+              value={editTitle}
+              onChange={(e) => setEditTitle(e.target.value)}
+              onBlur={handleEditSave}
+              onKeyDown={handleKeyDown}
+              className="w-full px-2 py-1 border border-blue-400 rounded outline-none"
+            />
+          ) : (
+            <span
+              onClick={handleEditClick}
+              className={cn(
+                'block truncate text-gray-800 cursor-text hover:bg-gray-100 px-1 -mx-1 rounded',
+                todo.completed && 'line-through text-red-500'
+              )}
+              title={todo.title || ''}
+            >
+              {renderTitle()}
+            </span>
+          )}
         </div>
         <button
           onClick={handleRemove}
