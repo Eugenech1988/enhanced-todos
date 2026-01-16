@@ -110,7 +110,7 @@ export const Todo = ({ todo, index, totalTodos }: TodoProps) => {
             )}
           </span>
         </label>
-        <div className="flex-1 min-w-0 pr-2">
+        <div className="flex-1 min-w-0 mr-2">
           {isEditing ? (
             <input
               ref={inputRef}
