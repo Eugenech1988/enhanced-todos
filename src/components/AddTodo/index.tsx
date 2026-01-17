@@ -1,5 +1,5 @@
 import { useTodo } from '@/context/todoContext';
-import { Activity, useActionState, useState, useRef } from 'react';
+import { useActionState, useState, useRef } from 'react';
 import { cn } from '@/utils';
 
 type State = {
@@ -19,7 +19,7 @@ export const AddTodo = () => {
   const [errorDismissed, setErrorDismissed] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
 
-  async function addTodoAction(_prevState: State, formData: FormData): Promise<State> {
+  const addTodoAction = async (_prevState: State, formData: FormData): Promise<State> => {
     const inputValue = formData.get('inputValue') as string;
 
     if (!inputValue || !inputValue.trim()) {
@@ -38,6 +38,7 @@ export const AddTodo = () => {
   }
 
   const [state, formAction, isPending] = useActionState(addTodoAction, initialState);
+
   const showError = state.error && !isFocused && !errorDismissed;
 
   const handleFocus = () => {
@@ -102,11 +103,11 @@ export const AddTodo = () => {
           {isPending ? 'Adding...' : 'Add Todo'}
         </button>
       </div>
-      <Activity mode={showError ? 'visible' : 'hidden'}>
+      {showError &&
         <p className={cn('mt-2 text-red-500 text-sm')}>
           {state.error}
         </p>
-      </Activity>
+      }
     </form>
   );
 };

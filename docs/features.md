@@ -44,6 +44,16 @@ This document describes the enhanced features added to the todo application, par
   - "Set active" button: Marks all selected todos as active (not completed)
 - Buttons appear only when at least one todo is selected
 - Buttons show the count of selected todos in the delete button label
+- Mass operation buttons are encapsulated in a separate MassActions component
+
+### 3. Component Architecture
+
+#### MassActions Component
+- Dedicated component for handling mass operations on selected todos
+- Contains buttons for "Delete selected", "Set completed", and "Set active" operations
+- Only renders when at least one todo is selected
+- Receives selected count as a prop and accesses todo operations via context
+- Located at the top panel of the TodoList component
 
 ### 3. UI Improvements
 
@@ -79,6 +89,11 @@ This document describes the enhanced features added to the todo application, par
 - Added persistence for selection state using sessionStorage
 - Maintained data integrity when todos are added/removed
 
+#### MassActions Component
+- Created a dedicated component for mass operation buttons
+- Separates concerns by isolating mass operation UI and logic
+- Makes the TodoList component cleaner and more maintainable
+
 ## Usage Examples
 
 ### Selecting Todos
@@ -98,6 +113,23 @@ This document describes the enhanced features added to the todo application, par
 - When a todo is deleted, its ID is automatically removed from selectedIds
 - Selections persist across page refreshes
 - The "Select all" button only affects currently visible todos based on the active filter
+
+## Custom Hooks
+
+### useTodoDnD Hook
+- Provides drag-and-drop functionality for todo items
+- Includes two sub-functions:
+  - `useTodoItemDnD`: Handles individual todo item dragging behavior
+  - `useTodoMonitor`: Monitors drag events and handles reordering
+- Only active when filter is set to 'all'
+- Provides visual indicators during drag operations (highlighted edges)
+- Enables reordering of todos by dragging them to new positions
+
+### useClickOutside Hook
+- Detects clicks outside of a specified DOM element
+- Used primarily for closing dropdown menus and modals
+- Supports both mouse and touch events
+- Helps maintain clean UI interactions by automatically closing components when users click elsewhere
 
 ## Interactions with Other Components
 
@@ -134,3 +166,4 @@ This document describes the enhanced features added to the todo application, par
 - "Delete selected" button: Removes all selected todos at once
 - After mass deletion, selection state is cleared
 - Mass operations only affect currently selected todos
+- Mass operation buttons are now part of the MassActions component

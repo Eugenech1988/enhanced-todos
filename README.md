@@ -87,7 +87,7 @@ In the project directory, you can run:
 - Add and delete todos
 - Mark todos as complete/incomplete
 - Search through todos with highlighted search terms
-- Filter todos (All, Active, Completed)
+- Filter todos (All, Completed)
 - Drag and drop to reorder todos (when viewing all todos)
 - Responsive design that works on all device sizes
 - Session storage persistence to save your todos between sessions
@@ -101,8 +101,11 @@ src/
 │   ├── FilterDropdown/   # Component for filtering todos
 │   ├── SearchTodos/      # Component for searching todos
 │   ├── Todo/             # Component for individual todo items
-│   └── TodoList/         # Component for displaying the list of todos
+│   ├── TodoList/         # Component for displaying the list of todos
+│   └── MassActions/      # Component for mass operations on selected todos
 ├── context/              # React context providers
+├── docs/                 # Documentation files
+│   └── features.md       # Detailed documentation of features and functionality
 ├── hooks/                # Custom React hooks (e.g., drag-and-drop functionality)
 ├── utils/                # Utility functions
 ├── constants/            # Application constants
