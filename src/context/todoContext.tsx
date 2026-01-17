@@ -24,6 +24,8 @@ type TTodoContextValue = {
   setSelectedIds: (ids: string[]) => void;
   selectAllTodos: () => void;
   clearSelectedTodos: () => void;
+  removeSelectedTodos: () => void;
+  setCompletedForSelected: (completed: boolean) => void;
 };
 
 const defaultTodoContext: TTodoContextValue = {
@@ -41,6 +43,8 @@ const defaultTodoContext: TTodoContextValue = {
   setSelectedIds: () => { },
   selectAllTodos: () => { },
   clearSelectedTodos: () => { },
+  removeSelectedTodos: () => { },
+  setCompletedForSelected: () => { },
 };
 
 const defaultValue: TTodo[] = [
@@ -134,6 +138,19 @@ export const TodoContextProvider = ({ children }: { children: ReactNode }) => {
     setSelectedIds([]);
   };
 
+  const removeSelectedTodos = () => {
+    setTodos(prev => prev.filter(todo => !selectedIds.includes(todo.id)));
+    setSelectedIds([]);
+  };
+
+  const setCompletedForSelected = (completed: boolean) => {
+    setTodos(prev =>
+      prev.map(todo =>
+        selectedIds.includes(todo.id) ? { ...todo, completed } : todo
+      )
+    );
+  };
+
   return (
     <TodoContext.Provider
       value={{
@@ -151,6 +168,8 @@ export const TodoContextProvider = ({ children }: { children: ReactNode }) => {
         setSelectedIds,
         selectAllTodos,
         clearSelectedTodos,
+        removeSelectedTodos,
+        setCompletedForSelected,
       }}
     >
       {children}

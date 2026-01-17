@@ -108,7 +108,7 @@ export const Todo = ({ todo, index, totalTodos }: TodoProps) => {
             type="button"
           >
             {selectedIds.includes(todo.id) ? (
-              <span className="w-5 h-5 flex items-center justify-center rounded bg-blue-500">
+              <span className="w-5 h-5 flex items-center justify-center rounded bg-indigo-500">
                 <Check size={14} color="white" />
               </span>
             ) : (
