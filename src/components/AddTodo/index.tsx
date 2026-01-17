@@ -1,112 +1,87 @@
 import { useTodo } from '@/context/todoContext';
-import { useActionState, useState, useRef } from 'react';
+import { useActionState, useRef } from 'react';
 import { cn } from '@/utils';
 
 type State = {
-  inputValue: string;
   error: string | null;
 };
 
 const initialState: State = {
-  inputValue: '',
   error: null
 };
 
 export const AddTodo = () => {
   const { addTodo } = useTodo();
-  const [isFocused, setIsFocused] = useState(false);
-  const [needsShakeAnimation, setNeedsShakeAnimation] = useState(false);
-  const [errorDismissed, setErrorDismissed] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
 
-  const addTodoAction = async (_prevState: State, formData: FormData): Promise<State> => {
-    const inputValue = formData.get('inputValue') as string;
+  const addTodoAction = async (_: State, formData: FormData): Promise<State> => {
+    const value = String(formData.get('inputValue') ?? '').trim();
 
-    if (!inputValue || !inputValue.trim()) {
-      setErrorDismissed(false);
-      return { inputValue, error: 'Task title is required' };
+    if (!value) {
+      return { error: 'Task title is required' };
     }
 
-    if (inputValue.length > 100) {
-      setErrorDismissed(false);
-      return { inputValue, error: 'Task title is too long' };
+    if (value.length > 100) {
+      return { error: 'Task title is too long' };
     }
 
-    addTodo(inputValue.trim());
-    setErrorDismissed(false);
-    return { inputValue: '', error: null };
-  }
+    addTodo(value);
+    inputRef.current?.form?.reset();
 
-  const [state, formAction, isPending] = useActionState(addTodoAction, initialState);
-
-  const showError = state.error && !isFocused && !errorDismissed;
-
-  const handleFocus = () => {
-    setIsFocused(true);
-    if (state.error) {
-      setErrorDismissed(true);
-    }
+    return { error: null };
   };
 
-  const handleBlur = () => {
-    setIsFocused(false);
-    const currentValue = inputRef.current?.value || '';
-    if (!currentValue || !currentValue.trim()) {
-      setNeedsShakeAnimation(true);
-      requestAnimationFrame(() => {
-        setNeedsShakeAnimation(false);
-      });
-    }
-  };
+  const [state, formAction, isPending] = useActionState(
+    addTodoAction,
+    initialState
+  );
+
+  const showError = Boolean(state.error);
 
   return (
     <form action={formAction} className="mb-4">
       <div className="flex flex-col sm:flex-row gap-2">
         <div className="relative flex-1">
           <input
-            type="text"
-            id="add-todo-input"
-            name="inputValue"
             ref={inputRef}
-            defaultValue={initialState.inputValue}
+            name="inputValue"
             placeholder=" "
-            onFocus={handleFocus}
-            onBlur={handleBlur}
-            className={cn(
-              'peer w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-blue-500 transition-all placeholder-transparent',
-              'border-blue-500 placeholder-shown:border-gray-300 focus:border-blue-500',
-              showError && '!border-red-500',
-              needsShakeAnimation && 'animate-shake'
-            )}
             disabled={isPending}
-          />
-          <label
-            htmlFor="add-todo-input"
             className={cn(
-              'absolute left-4 -top-2.5 bg-white px-1 text-sm transition-all text-blue-500',
-              'peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-400 peer-placeholder-shown:top-2',
-              'peer-focus:-top-2.5 peer-focus:text-blue-500 peer-focus:text-sm',
+              'peer w-full px-4 py-2 border rounded-lg transition-all',
+              'placeholder-transparent focus:outline-none focus:ring-blue-500',
+              'border-gray-300 focus:border-blue-500',
+              showError && 'border-red-500 animate-shake'
+            )}
+          />
+
+          <label
+            className={cn(
+              'absolute left-4 bg-white px-1 transition-all',
+              'top-2 text-base text-gray-400',
+              'peer-focus:-top-2.5 peer-focus:text-sm peer-focus:text-blue-500',
+              'peer-not-placeholder-shown:-top-2.5 peer-not-placeholder-shown:text-sm',
               showError && 'text-red-500'
             )}
           >
             Enter a new todo
           </label>
         </div>
+
         <button
           type="submit"
           disabled={isPending}
-          className={cn(
-            'px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer disabled:opacity-50 transition-colors duration-200'
-          )}
+          className="px-4 py-2 cursor-pointer bg-blue-500 text-white rounded-lg hover:bg-blue-600 disabled:opacity-50 transition"
         >
-          {isPending ? 'Adding...' : 'Add Todo'}
+          {isPending ? 'Adding…' : 'Add Todo'}
         </button>
       </div>
-      {showError &&
-        <p className={cn('mt-2 text-red-500 text-sm')}>
+
+      {showError && (
+        <p className="mt-2 text-sm text-red-500">
           {state.error}
         </p>
-      }
+      )}
     </form>
   );
 };
