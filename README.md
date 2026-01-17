@@ -91,6 +91,9 @@ In the project directory, you can run:
 - Drag and drop to reorder todos (when viewing all todos)
 - Responsive design that works on all device sizes
 - Session storage persistence to save your todos between sessions
+- Smooth animations for dropdown menus and transitions
+- Fixed header with scrollable todo list area
+- Dedicated mass action buttons for selected todos
 
 ## Project Structure
 

@@ -96,6 +96,13 @@ This document describes the enhanced features added to the todo application, par
 - Separates concerns by isolating mass operation UI and logic
 - Makes the TodoList component cleaner and more maintainable
 
+#### FilterDropdown Component
+- Dropdown menu for selecting todo filters (All, Active, Completed)
+- Features smooth opacity animations for showing/hiding (fadeIn/fadeOut)
+- Includes visual feedback with blue border and text when dropdown is open
+- Individual filter items have dedicated event handlers for improved performance
+- Only the todo list area scrolls while header and filter controls remain fixed
+
 ## Usage Examples
 
 ### Selecting Todos
