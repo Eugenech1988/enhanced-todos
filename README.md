@@ -13,6 +13,15 @@
  - **tailwind-merge** - A utility for merging Tailwind CSS classes with conflict resolution
  - **@atlaskit/pragmatic-drag-and-drop** - A drag and drop toolkit for building accessible, robust drag and drop experiences
  
+ ## Future Enhancements
+ 
+ For future improvements, consider implementing:
+ 
+ - **Framer Motion** - For smoother animations and transitions, especially for component appearance and removal
+ - **GSAP** - For advanced "smart" background effects and complex animations
+ - **shadcn/ui** - For enhanced component styling and additional UI components
+ - **Zustand** - For more efficient state management as the application grows
+ 
  ## Why I Use Tailwind CSS
  
  I use Tailwind CSS because it enables rapid UI development with its utility-first approach. Instead of writing custom CSS, I can compose existing utility classes to build custom designs directly in JSX. This approach offers several advantages:

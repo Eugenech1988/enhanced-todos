@@ -23,6 +23,7 @@ export const Todo = ({ todo, index, totalTodos }: TodoProps) => {
 
   const [isEditing, setIsEditing] = useState(false);
   const [editTitle, setEditTitle] = useState(todo.title);
+  const [isRemoving, setIsRemoving] = useState(false); // Состояние для анимации выхода
   const inputRef = useRef<HTMLInputElement>(null);
 
   const { elementRef, dragHandleRef, isDragging, closestEdge } = useTodoItemDnD({
@@ -35,6 +36,14 @@ export const Todo = ({ todo, index, totalTodos }: TodoProps) => {
     if (isEditing) inputRef.current?.focus();
   }, [isEditing]);
 
+  // Задержка удаления для проигрывания анимации
+  const handleRemove = () => {
+    setIsRemoving(true);
+    setTimeout(() => {
+      removeTodo(todo.id);
+    }, 300); // Должно совпадать с длительностью slideOut в CSS
+  };
+
   const handleSelect = () =>
     setSelectedIds(selectedIds.includes(todo.id)
       ? selectedIds.filter(id => id !== todo.id)
@@ -42,8 +51,6 @@ export const Todo = ({ todo, index, totalTodos }: TodoProps) => {
     );
 
   const handleToggle = () => toggleTodo(todo.id);
-  const handleRemove = () => removeTodo(todo.id);
-
   const handleEditClick = () => {
     setIsEditing(true);
     setEditTitle(todo.title);
@@ -76,16 +83,17 @@ export const Todo = ({ todo, index, totalTodos }: TodoProps) => {
     <li
       ref={elementRef}
       className={cn(
-        'p-3 relative',
+        'p-3 relative bg-white transition-all',
         'hover:bg-gray-50',
         index !== totalTodos - 1 && 'border-b border-gray-200',
-        isDragging && 'opacity-50'
+        isDragging && 'opacity-50',
+        isRemoving ? 'todo-exit' : 'todo-enter' // Применяем классы анимации
       )}
     >
       {closestEdge && (
         <div
           className={cn(
-            'absolute left-0 right-0 h-0.5 bg-blue-500',
+            'absolute left-0 right-0 h-0.5 bg-blue-500 z-10',
             closestEdge === 'top' ? 'top-0' : 'bottom-0'
           )}
         />
@@ -93,20 +101,19 @@ export const Todo = ({ todo, index, totalTodos }: TodoProps) => {
 
       <div className="flex items-center space-x-3">
         {filter === 'all' && (
-          <div ref={dragHandleRef} className="cursor-grab hover:text-gray-600 text-gray-400">
+          <div ref={dragHandleRef} className="cursor-grab active:cursor-grabbing hover:text-gray-600 text-gray-400 shrink-0">
             <GripVertical size={20} />
           </div>
         )}
 
         {filter === 'all' && (
-          <button onClick={handleSelect} className="flex items-center" type="button">
-            {selectedIds.includes(todo.id) ? (
-              <span className="w-5 h-5 flex items-center cursor-pointer justify-center rounded bg-indigo-500">
-                <Check size={14} color="white" />
-              </span>
-            ) : (
-              <span className="w-5 h-5 flex items-center cursor-pointer justify-center rounded border border-gray-400"></span>
-            )}
+          <button onClick={handleSelect} className="flex items-center shrink-0" type="button">
+            <div className={cn(
+              "w-5 h-5 flex items-center justify-center rounded transition-colors duration-200",
+              selectedIds.includes(todo.id) ? "bg-indigo-500" : "border border-gray-400"
+            )}>
+              {selectedIds.includes(todo.id) && <Check size={14} color="white" />}
+            </div>
           </button>
         )}
 
@@ -119,14 +126,14 @@ export const Todo = ({ todo, index, totalTodos }: TodoProps) => {
               onChange={(e) => setEditTitle(e.target.value)}
               onBlur={handleEditSave}
               onKeyDown={handleKeyDown}
-              className="w-full outline-none shadow-none focus:ring-0 border-b border-blue-500"
+              className="w-full outline-none bg-transparent border-b-2 border-blue-500 py-0.5"
             />
           ) : (
             <span
               onClick={handleEditClick}
               className={cn(
-                'block truncate text-gray-800 cursor-text hover:bg-gray-100 px-1 -mx-1 rounded',
-                todo.completed && 'line-through text-blue-500'
+                'block truncate text-gray-800 cursor-text hover:bg-gray-200/50 px-1 -mx-1 rounded transition-colors',
+                todo.completed && 'line-through text-gray-400'
               )}
               title={todo.title || ''}
             >
@@ -135,20 +142,23 @@ export const Todo = ({ todo, index, totalTodos }: TodoProps) => {
           )}
         </div>
 
-        <button onClick={handleToggle} className="flex items-center cursor-pointer" type="button">
+        <button onClick={handleToggle} className="flex items-center shrink-0 active:scale-90 transition-transform" type="button">
           <CircleCheck
-            size={todo.completed ? 24 : 22}
-            color={todo.completed ? 'white' : '#9ca3af'}
-            fill={todo.completed ? '#3b82f6' : 'none'}
+            size={24}
+            className={cn(
+              "transition-all duration-300",
+              todo.completed ? "text-blue-500 fill-blue-500" : "text-gray-300 fill-none"
+            )}
+            color={todo.completed ? 'white' : 'currentColor'}
           />
         </button>
 
         <button
           onClick={handleRemove}
-          className="text-red-500 hover:text-red-700 transition-colors cursor-pointer duration-200"
+          className="text-gray-400 hover:text-red-500 transition-colors p-1 shrink-0"
           aria-label="Delete task"
         >
-          <Trash2 size={20} />
+          <Trash2 size={18} />
         </button>
       </div>
     </li>
