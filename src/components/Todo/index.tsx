@@ -1,5 +1,5 @@
 import { type TTodo, useTodo } from '@/context/todoContext.tsx';
-import { Trash2, Check, GripVertical } from 'lucide-react';
+import { Trash2, CircleCheck, GripVertical } from 'lucide-react';
 import { cn } from '@/utils';
 import { useTodoItemDnD } from '@/hooks/useTodoDnD';
 import { useState, useRef, useEffect } from 'react';
@@ -93,24 +93,7 @@ export const Todo = ({ todo, index, totalTodos }: TodoProps) => {
             <GripVertical size={20} />
           </div>
         )}
-        <label className="flex items-center cursor-pointer">
-          <input
-            type="checkbox"
-            checked={todo.completed}
-            onChange={handleToggle}
-            className="sr-only"
-          />
-          <span
-            className={cn('flex items-center justify-center h-6 w-6 border-2 rounded-md transition-colors duration-200',
-              todo.completed
-                ? 'bg-blue-500 border-blue-500'
-                : 'border-gray-300 hover:border-blue-400')}>
-            {todo.completed && (
-              <Check size={18} color="white" />
-            )}
-          </span>
-        </label>
-        <div className="flex-1 min-w-0 mr-2">
+        <div className="flex-1 min-w-0 mr-3">
           {isEditing ? (
             <input
               ref={inputRef}
@@ -134,6 +117,17 @@ export const Todo = ({ todo, index, totalTodos }: TodoProps) => {
             </span>
           )}
         </div>
+        <button
+          onClick={handleToggle}
+          className="flex items-center cursor-pointer"
+          type="button"
+        >
+          <CircleCheck
+            size={todo.completed ? 24 : 22}
+            color={todo.completed ? "white" : "#9ca3af"}
+            fill={todo.completed ? "#3b82f6" : "none"}
+          />
+        </button>
         <button
           onClick={handleRemove}
           className="text-red-500 hover:text-red-700 transition-colors duration-200 cursor-pointer"
