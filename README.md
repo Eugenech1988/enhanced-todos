@@ -61,7 +61,7 @@ To get started with Enhanced Todos, follow these steps:
 
  1. Clone the repository:
     ```bash
-    git clone <repository-url>
+    git clone https://github.com/Eugenech1988/enhanced-todos.git
     cd enhanced-todos
     ```
 
