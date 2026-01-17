@@ -23,7 +23,7 @@ export const Todo = ({ todo, index, totalTodos }: TodoProps) => {
 
   const [isEditing, setIsEditing] = useState(false);
   const [editTitle, setEditTitle] = useState(todo.title);
-  const [isRemoving, setIsRemoving] = useState(false); // Состояние для анимации выхода
+  const [isRemoving, setIsRemoving] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
 
   const { elementRef, dragHandleRef, isDragging, closestEdge } = useTodoItemDnD({
@@ -36,12 +36,11 @@ export const Todo = ({ todo, index, totalTodos }: TodoProps) => {
     if (isEditing) inputRef.current?.focus();
   }, [isEditing]);
 
-  // Задержка удаления для проигрывания анимации
   const handleRemove = () => {
     setIsRemoving(true);
     setTimeout(() => {
       removeTodo(todo.id);
-    }, 300); // Должно совпадать с длительностью slideOut в CSS
+    }, 300);
   };
 
   const handleSelect = () =>

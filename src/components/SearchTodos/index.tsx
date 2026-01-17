@@ -10,7 +10,6 @@ export const SearchTodos = () => {
 
   const debouncedSetSearchQuery = useRef(
     debounce(() => {
-      // Берем значение напрямую из рефа
       if (inputRef.current) {
         setSearchQuery(inputRef.current.value);
       }
