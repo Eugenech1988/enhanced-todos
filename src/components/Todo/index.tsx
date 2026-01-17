@@ -10,7 +10,7 @@ type TodoProps = {
   totalTodos: number;
 };
 
-export const Todo = ({ todo, index, totalTodos }: TodoProps) => {
+export const Todo = ({todo, index, totalTodos}: TodoProps) => {
   const {
     toggleTodo,
     removeTodo,
@@ -26,7 +26,7 @@ export const Todo = ({ todo, index, totalTodos }: TodoProps) => {
   const [isRemoving, setIsRemoving] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
 
-  const { elementRef, dragHandleRef, isDragging, closestEdge } = useTodoItemDnD({
+  const {elementRef, dragHandleRef, isDragging, closestEdge} = useTodoItemDnD({
     todo,
     index,
     filter
@@ -99,22 +99,22 @@ export const Todo = ({ todo, index, totalTodos }: TodoProps) => {
       )}
 
       <div className="flex items-center space-x-3">
-        {filter === 'all' && (
-          <div ref={dragHandleRef} className="cursor-grab active:cursor-grabbing hover:text-gray-600 text-gray-400 shrink-0">
-            <GripVertical size={20} />
-          </div>
-        )}
-
-        {filter === 'all' && (
-          <button onClick={handleSelect} className="flex items-center shrink-0" type="button">
-            <div className={cn(
-              "w-5 h-5 flex items-center cursor-pointer justify-center rounded transition-colors duration-200",
-              selectedIds.includes(todo.id) ? "bg-indigo-500" : "border border-gray-400"
-            )}>
-              {selectedIds.includes(todo.id) && <Check size={14} color="white" />}
+        {filter === 'all' &&
+          <>
+            <div ref={dragHandleRef}
+                 className="cursor-grab active:cursor-grabbing hover:text-gray-600 text-gray-400 shrink-0">
+              <GripVertical size={20}/>
             </div>
-          </button>
-        )}
+            <button onClick={handleSelect} className="flex items-center shrink-0" type="button">
+              <div className={cn(
+                'w-5 h-5 flex items-center cursor-pointer justify-center rounded transition-colors duration-200',
+                selectedIds.includes(todo.id) ? 'bg-indigo-500' : 'border border-gray-400'
+              )}>
+                {selectedIds.includes(todo.id) && <Check size={14} color="white"/>}
+              </div>
+            </button>
+          </>
+        }
 
         <div className="flex-1 min-w-0 mr-3">
           {isEditing ? (
@@ -141,12 +141,14 @@ export const Todo = ({ todo, index, totalTodos }: TodoProps) => {
           )}
         </div>
 
-        <button onClick={handleToggle} className="flex items-center cursor-pointer shrink-0 active:scale-90 transition-transform" type="button">
+        <button onClick={handleToggle}
+                className="flex items-center cursor-pointer shrink-0 active:scale-90 transition-transform"
+                type="button">
           <CircleCheck
             size={24}
             className={cn(
-              "transition-all duration-300",
-              todo.completed ? "text-blue-500 fill-blue-500" : "text-gray-300 fill-none"
+              'transition-all duration-300',
+              todo.completed ? 'text-blue-500 fill-blue-500' : 'text-gray-300 fill-none'
             )}
             color={todo.completed ? 'white' : 'currentColor'}
           />
@@ -157,7 +159,7 @@ export const Todo = ({ todo, index, totalTodos }: TodoProps) => {
           className="text-gray-400 cursor-pointer hover:text-red-500 transition-colors p-1 shrink-0"
           aria-label="Delete task"
         >
-          <Trash2 size={18} />
+          <Trash2 size={18}/>
         </button>
       </div>
     </li>

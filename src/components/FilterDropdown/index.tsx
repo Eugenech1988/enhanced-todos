@@ -96,7 +96,7 @@ export const FilterDropdown = ({ className }: { className?: string }) => {
               onClick={selectFilter(f)}
               className={cn(
                 'block cursor-pointer hover:bg-gray-100 w-full px-4 py-2 text-md text-left capitalize transition-colors outline-none',
-                filter === f ? 'bg-blue-50 text-blue-700 font-semibold' : 'text-gray-700',
+                filter === f ? 'bg-blue-50 text-blue-700' : 'text-gray-700',
                 activeIndex === index ? 'bg-gray-100' : ''
               )}
             >
