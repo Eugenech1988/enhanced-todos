@@ -16,7 +16,16 @@ export const MassActions = ({ selectedCount }: MassActionsProps) => {
   };
 
   if (selectedCount === 0) {
-    return null;
+    return (
+      <div className="flex flex-wrap gap-2 justify-end">
+        <button
+          disabled
+          className="px-3 py-1 text-sm bg-gray-300 text-gray-500 rounded cursor-not-allowed transition-colors duration-200 min-w-[120px]"
+        >
+          No items selected
+        </button>
+      </div>
+    );
   }
 
   return (
@@ -35,7 +44,7 @@ export const MassActions = ({ selectedCount }: MassActionsProps) => {
       </button>
       <button
         onClick={handleSetActive}
-        className="px-3 py-1 text-sm bg-blue-500 text-white rounded hover:bg-blue-600 cursor-pointer transition-colors duration-200 min-w-[80px]"
+        className="px-3 py-1 text-sm bg-yellow-500 text-white rounded hover:bg-yellow-600 cursor-pointer transition-colors duration-200 min-w-[100px]"
       >
         Active
       </button>

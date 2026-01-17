@@ -11,7 +11,7 @@ const initialState: State = {
 };
 
 export const AddTodo = () => {
-  const { addTodo } = useTodo();
+  const { addTodo, columns } = useTodo();
   const inputRef = useRef<HTMLInputElement>(null);
 
   const addTodoAction = async (_: State, formData: FormData): Promise<State> => {
@@ -25,7 +25,11 @@ export const AddTodo = () => {
       return { error: 'Task title is too long' };
     }
 
-    addTodo(value);
+    // Find the "To Do" column
+    const todoColumn = columns.find(col => col.title.toLowerCase() === 'to do');
+    const columnId = todoColumn?.id;
+
+    addTodo(value, columnId);
     inputRef.current?.form?.reset();
 
     return { error: null };
@@ -64,7 +68,7 @@ export const AddTodo = () => {
               showError && 'text-red-500'
             )}
           >
-            Enter a new todo
+            Enter a new task
           </label>
         </div>
 
@@ -73,7 +77,7 @@ export const AddTodo = () => {
           disabled={isPending}
           className="px-4 py-2 cursor-pointer bg-blue-500 text-white rounded-lg hover:bg-blue-600 disabled:opacity-50 transition"
         >
-          {isPending ? 'Adding…' : 'Add Todo'}
+          {isPending ? 'Adding…' : 'Add Task'}
         </button>
       </div>
 
