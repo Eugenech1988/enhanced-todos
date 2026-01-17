@@ -20,6 +20,10 @@ type TTodoContextValue = {
   setFilter: (filter: TFilters) => void;
   reorderTodos: (startIndex: number, endIndex: number) => void;
   updateTodo: (id: string, title: string) => void;
+  selectedIds: string[];
+  setSelectedIds: (ids: string[]) => void;
+  selectAllTodos: () => void;
+  clearSelectedTodos: () => void;
 };
 
 const defaultTodoContext: TTodoContextValue = {
@@ -33,6 +37,10 @@ const defaultTodoContext: TTodoContextValue = {
   filter: 'all',
   setFilter: () => { },
   reorderTodos: () => { },
+  selectedIds: [],
+  setSelectedIds: () => { },
+  selectAllTodos: () => { },
+  clearSelectedTodos: () => { },
 };
 
 const defaultValue: TTodo[] = [
@@ -61,10 +69,18 @@ export const TodoContextProvider = ({ children }: { children: ReactNode }) => {
 
   const [searchQuery, setSearchQuery] = useState('');
   const [filter, setFilter] = useState<TFilters>('all');
+  const [selectedIds, setSelectedIds] = useState<string[]>(() => {
+    const savedSelectedIds = sessionStorage.getItem('selectedIds');
+    return savedSelectedIds ? JSON.parse(savedSelectedIds) : [];
+  });
 
   useEffect(() => {
     sessionStorage.setItem('todos', JSON.stringify(todos));
   }, [todos]);
+
+  useEffect(() => {
+    sessionStorage.setItem('selectedIds', JSON.stringify(selectedIds));
+  }, [selectedIds]);
 
   const addTodo = (title: string) => {
     setTodos(prev => [
@@ -90,6 +106,7 @@ export const TodoContextProvider = ({ children }: { children: ReactNode }) => {
 
   const removeTodo = (id: string) => {
     setTodos(prev => prev.filter(todo => todo.id !== id));
+    setSelectedIds(prev => prev.filter(selectedId => selectedId !== id));
   };
 
   const reorderTodos = (startIndex: number, endIndex: number) => {
@@ -109,6 +126,14 @@ export const TodoContextProvider = ({ children }: { children: ReactNode }) => {
     );
   };
 
+  const selectAllTodos = () => {
+    setSelectedIds(todos.map(todo => todo.id));
+  };
+
+  const clearSelectedTodos = () => {
+    setSelectedIds([]);
+  };
+
   return (
     <TodoContext.Provider
       value={{
@@ -122,6 +147,10 @@ export const TodoContextProvider = ({ children }: { children: ReactNode }) => {
         searchQuery,
         filter,
         setFilter,
+        selectedIds,
+        setSelectedIds,
+        selectAllTodos,
+        clearSelectedTodos,
       }}
     >
       {children}

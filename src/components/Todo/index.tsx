@@ -1,5 +1,5 @@
 import { type TTodo, useTodo } from '@/context/todoContext.tsx';
-import { Trash2, CircleCheck, GripVertical } from 'lucide-react';
+import { Trash2, CircleCheck, Check, GripVertical } from 'lucide-react';
 import { cn } from '@/utils';
 import { useTodoItemDnD } from '@/hooks/useTodoDnD';
 import { useState, useRef, useEffect } from 'react';
@@ -11,10 +11,18 @@ type TodoProps = {
 };
 
 export const Todo = ({ todo, index, totalTodos }: TodoProps) => {
-  const { toggleTodo, removeTodo, updateTodo, filter, searchQuery } = useTodo();
+  const { toggleTodo, removeTodo, updateTodo, filter, searchQuery, selectedIds, setSelectedIds } = useTodo();
   const [isEditing, setIsEditing] = useState(false);
   const [editTitle, setEditTitle] = useState(todo.title);
   const inputRef = useRef<HTMLInputElement>(null);
+
+  const handleSelect = () => {
+    if (selectedIds.includes(todo.id)) {
+      setSelectedIds(selectedIds.filter(id => id !== todo.id));
+    } else {
+      setSelectedIds([...selectedIds, todo.id]);
+    }
+  };
 
   const { elementRef, dragHandleRef, isDragging, closestEdge } = useTodoItemDnD({
     todo,
@@ -92,6 +100,21 @@ export const Todo = ({ todo, index, totalTodos }: TodoProps) => {
           <div ref={dragHandleRef} className="cursor-grab hover:text-gray-600 text-gray-40">
             <GripVertical size={20} />
           </div>
+        )}
+        {filter === 'all' && (
+          <button
+            onClick={handleSelect}
+            className="flex items-center cursor-pointer"
+            type="button"
+          >
+            {selectedIds.includes(todo.id) ? (
+              <span className="w-5 h-5 flex items-center justify-center rounded bg-blue-500">
+                <Check size={14} color="white" />
+              </span>
+            ) : (
+              <span className="w-5 h-5 flex items-center justify-center rounded border border-gray-400"></span>
+            )}
+          </button>
         )}
         <div className="flex-1 min-w-0 mr-3">
           {isEditing ? (
