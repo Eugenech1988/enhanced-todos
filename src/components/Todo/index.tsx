@@ -108,7 +108,7 @@ export const Todo = ({ todo, index, totalTodos }: TodoProps) => {
         {filter === 'all' && (
           <button onClick={handleSelect} className="flex items-center shrink-0" type="button">
             <div className={cn(
-              "w-5 h-5 flex items-center justify-center rounded transition-colors duration-200",
+              "w-5 h-5 flex items-center cursor-pointer justify-center rounded transition-colors duration-200",
               selectedIds.includes(todo.id) ? "bg-indigo-500" : "border border-gray-400"
             )}>
               {selectedIds.includes(todo.id) && <Check size={14} color="white" />}
@@ -141,7 +141,7 @@ export const Todo = ({ todo, index, totalTodos }: TodoProps) => {
           )}
         </div>
 
-        <button onClick={handleToggle} className="flex items-center shrink-0 active:scale-90 transition-transform" type="button">
+        <button onClick={handleToggle} className="flex items-center cursor-pointer shrink-0 active:scale-90 transition-transform" type="button">
           <CircleCheck
             size={24}
             className={cn(
@@ -154,7 +154,7 @@ export const Todo = ({ todo, index, totalTodos }: TodoProps) => {
 
         <button
           onClick={handleRemove}
-          className="text-gray-400 hover:text-red-500 transition-colors p-1 shrink-0"
+          className="text-gray-400 cursor-pointer hover:text-red-500 transition-colors p-1 shrink-0"
           aria-label="Delete task"
         >
           <Trash2 size={18} />
