@@ -52,6 +52,12 @@ In this application, I chose to use sessionStorage for persisting todos between 
 - **No Server Dependencies**: Allows the application to maintain state without requiring backend services
 - **Performance**: Provides fast read/write operations for client-side data management
 
+The choice of sessionStorage over localStorage is particularly important for a todo application because:
+- **Temporary Nature of Tasks**: Most todos have a limited lifespan and become irrelevant after a certain period
+- **Contextual Storage**: Tasks are typically associated with the current browsing session and are naturally cleared when the user closes the tab
+- **Privacy Protection**: Sensitive task information doesn't persist across browser sessions, enhancing user privacy
+- **Prevents Clutter**: Avoids accumulating outdated tasks that would require manual cleanup in localStorage
+
 While localStorage would provide permanent storage, sessionStorage strikes the right balance between persistence and automatic cleanup for a todo application.
 
 ## Installation
