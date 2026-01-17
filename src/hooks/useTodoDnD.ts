@@ -106,13 +106,6 @@ export const useTodoMonitor = (reorderTodos: (startIndex: number, endIndex: numb
 
                 const destinationElementIndex = destinationData.index as number;
 
-                if (
-                    typeof destinationElementIndex !== 'number' ||
-                    typeof sourceIndex !== 'number'
-                ) {
-                    return;
-                }
-
                 const closestEdgeOfTarget = extractClosestEdge(destinationData);
 
                 if (sourceIndex === destinationElementIndex) {
