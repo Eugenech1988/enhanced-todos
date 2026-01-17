@@ -53,7 +53,6 @@ export const AddTodo = () => {
     const currentValue = inputRef.current?.value || '';
     if (!currentValue || !currentValue.trim()) {
       setNeedsShakeAnimation(true);
-      // Сброс анимации через следующий тик
       requestAnimationFrame(() => {
         setNeedsShakeAnimation(false);
       });

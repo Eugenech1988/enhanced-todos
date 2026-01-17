@@ -39,21 +39,23 @@ This document describes the enhanced features added to the todo application, par
 
 ### 2. Mass Operations
 - Added buttons for mass operations on selected todos:
-  - "Delete selected" button: Deletes all selected todos
-  - "Set completed" button: Marks all selected todos as completed
-  - "Set active" button: Marks all selected todos as active (not completed)
+  - "Delete" button: Deletes all selected todos
+  - "Complete" button: Marks all selected todos as completed
+  - "Active" button: Marks all selected todos as active (not completed)
 - Buttons appear only when at least one todo is selected
 - Buttons show the count of selected todos in the delete button label
 - Mass operation buttons are encapsulated in a separate MassActions component
+- Buttons have responsive design with minimum widths for better mobile experience
 
 ### 3. Component Architecture
 
 #### MassActions Component
 - Dedicated component for handling mass operations on selected todos
-- Contains buttons for "Delete selected", "Set completed", and "Set active" operations
+- Contains buttons for "Delete", "Complete", and "Active" operations
 - Only renders when at least one todo is selected
 - Receives selected count as a prop and accesses todo operations via context
 - Located at the top panel of the TodoList component
+- Includes responsive design with minimum widths for better mobile experience
 
 ### 3. UI Improvements
 
@@ -161,9 +163,10 @@ This document describes the enhanced features added to the todo application, par
 - Editing does not affect selection or completion state
 
 ### With Mass Operation Buttons (Top Panel)
-- "Set completed" button: Changes completion status to completed for all selected todos
-- "Set active" button: Changes completion status to active (not completed) for all selected todos
-- "Delete selected" button: Removes all selected todos at once
+- "Complete" button: Changes completion status to completed for all selected todos
+- "Active" button: Changes completion status to active (not completed) for all selected todos
+- "Delete" button: Removes all selected todos at once
 - After mass deletion, selection state is cleared
 - Mass operations only affect currently selected todos
 - Mass operation buttons are now part of the MassActions component
+- Buttons have responsive design with minimum widths for better mobile experience

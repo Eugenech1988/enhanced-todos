@@ -25,7 +25,6 @@ export const TodoList = () => {
 
   useEffect(() => {
     if (containerRef.current) {
-      // Проверяем, есть ли прокрутка
       const hasScrollbar = containerRef.current.scrollHeight > containerRef.current.clientHeight;
       setShowScrollHint(hasScrollbar);
     }
@@ -47,16 +46,15 @@ export const TodoList = () => {
       className="bg-white rounded-lg shadow-md p-6 max-h-[calc(100vh-220px)] overflow-y-auto relative"
     >
       <h2 className="text-xl font-semibold mb-4 text-gray-700">Todos List</h2>
-      {/* Scroll hint indicator */}
       {showScrollHint && (
         <div className="absolute top-10 right-4 text-xs text-gray-400 hidden md:block">
           ↑↓ Scroll
         </div>
       )}
-      <div className="mb-4 flex flex-wrap justify-between items-center">
+      <div className="mb-4 sm:mb-6 flex flex-wrap justify-between items-center">
         <button
           onClick={handleSelectAll}
-          className="px-3 py-1 text-sm bg-indigo-500 text-white rounded hover:bg-indigo-600 cursor-pointer transition-colors duration-200"
+          className="px-3 py-1 text-sm sm:mb-0 mb-4 bg-indigo-500 text-white rounded hover:bg-indigo-600 cursor-pointer transition-colors duration-200"
         >
           {selectedIds.length === filteredTodos.length ? 'Clear all' : 'Select all'}
         </button>
