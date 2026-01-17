@@ -86,7 +86,7 @@ export const Todo = ({ todo, index, totalTodos }: TodoProps) => {
         'hover:bg-gray-50',
         index !== totalTodos - 1 && 'border-b border-gray-200',
         isDragging && 'opacity-50',
-        isRemoving ? 'todo-exit' : 'todo-enter' // Применяем классы анимации
+        isRemoving ? 'todo-exit' : 'todo-enter'
       )}
     >
       {closestEdge && (
