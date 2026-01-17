@@ -10,7 +10,7 @@ const initialState: State = {
   error: null
 };
 
-export const AddTodo = () => {
+export const AddTask = () => {
   const { addTodo, columns } = useTodo();
   const inputRef = useRef<HTMLInputElement>(null);
 
