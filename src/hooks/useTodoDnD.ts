@@ -177,7 +177,10 @@ export const useTodoMonitor = (reorderTodos: (startIndex: number, endIndex: numb
                     reorderTodos(sourceIndex, destinationIndex, sourceColumnId);
                     
                     // Clear the selection of the dragged item after reordering to prevent it from staying selected
-                    setSelectedIds(prev => prev.filter(id => id !== sourceTodo.id));
+                    // Only clear if it was added during this drag operation
+                    if (!selectedIds.includes(sourceTodo.id)) {
+                        setSelectedIds(prev => prev.filter(id => id !== sourceTodo.id));
+                    }
                 }
             },
         });

@@ -39,29 +39,37 @@ export const Column = ({ column }: ColumnProps) => {
       onDrop: (arg) => {
         // This handles drops on the column container itself (empty area)
         // The monitor handles drops on specific tasks within the column
+        
+        // To prevent duplicate handling, we'll only process drops on empty columns
+        // or when the drop occurred directly on the container
         const sourceData = arg.source.data;
+        
         if (sourceData.type === 'todo' && sourceData.columnId !== column.id) {
-          // Check if multiple items are selected and the source todo is among them
-          if (selectedIds.length > 1 && selectedIds.includes((sourceData.todo as TTodo).id)) {
-            // Get all selected tasks that belong to the source column
-            const selectedTasksInSourceColumn = selectedIds.filter(id => {
-              // Find which column this task belongs to by checking all columns
-              return columns.some(col =>
-                col.id === sourceData.columnId &&
-                col.todoIds.includes(id)
-              );
-            });
-            
-            // Move only the selected items from the source column to this column
-            if (selectedTasksInSourceColumn.length > 0) {
-              moveMultipleTasksToColumn(selectedTasksInSourceColumn, column.id);
+          // Only process if the target column is empty or if the drop occurred directly on the container
+          // (This reduces chance of duplicate processing with the task-level monitor)
+          if (column.todoIds.length === 0) {
+            // Check if multiple items are selected and the source todo is among them
+            if (selectedIds.length > 1 && selectedIds.includes((sourceData.todo as TTodo).id)) {
+              // Get all selected tasks that belong to the source column
+              const selectedTasksInSourceColumn = selectedIds.filter(id => {
+                // Find which column this task belongs to by checking all columns
+                return columns.some(col =>
+                  col.id === sourceData.columnId &&
+                  col.todoIds.includes(id)
+                );
+              });
+              
+              // Move only the selected items from the source column to this column
+              if (selectedTasksInSourceColumn.length > 0) {
+                moveMultipleTasksToColumn(selectedTasksInSourceColumn, column.id);
+              } else {
+                // If no selected tasks are in the source column, move just the source task
+                moveTaskToColumn((sourceData.todo as TTodo).id, column.id);
+              }
             } else {
-              // If no selected tasks are in the source column, move just the source task
+              // Move only the single dragged item
               moveTaskToColumn((sourceData.todo as TTodo).id, column.id);
             }
-          } else {
-            // Move only the single dragged item
-            moveTaskToColumn((sourceData.todo as TTodo).id, column.id);
           }
         }
       },

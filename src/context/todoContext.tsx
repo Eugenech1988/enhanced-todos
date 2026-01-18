@@ -261,72 +261,72 @@ export const TodoContextProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const moveTaskToColumn = (taskId: string, targetColumnId: string, insertIndex?: number) => {
-    // Find the source column
-    const sourceColumn = columns.find(col => col.todoIds.includes(taskId));
-
-    if (!sourceColumn || sourceColumn.id === targetColumnId) return;
-
-    // Remove from source
-    setColumns(prev =>
-      prev.map(col =>
-        col.id === sourceColumn.id
-          ? { ...col, todoIds: col.todoIds.filter(id => id !== taskId) }
-          : col
-      )
-    );
-
-    // Insert into target
-    setColumns(prev =>
-      prev.map(col =>
-        col.id === targetColumnId
-          ? {
-              ...col,
-              todoIds: insertIndex !== undefined && insertIndex >= 0 && insertIndex <= col.todoIds.length
-                ? [...col.todoIds.slice(0, insertIndex), taskId, ...col.todoIds.slice(insertIndex)]
-                : [...col.todoIds, taskId]
-            }
-          : col
-      )
-    );
-  };
-
-  const moveMultipleTasksToColumn = (taskIds: string[], targetColumnId: string, insertIndex?: number) => {
     setColumns(prev => {
-      const newColumns = [...prev];
+      // Find the source column
+      const sourceColumn = prev.find(col => col.todoIds.includes(taskId));
 
-      // Find and update source columns
-      const updatedColumns = newColumns.map(col => {
-        // Remove all taskIds from this column
-        const filteredTodoIds = col.todoIds.filter(id => !taskIds.includes(id));
-        return { ...col, todoIds: filteredTodoIds };
+      if (!sourceColumn || sourceColumn.id === targetColumnId) return prev;
+
+      // Create new columns array
+      const newColumns = prev.map(col => {
+        if (col.id === sourceColumn.id) {
+          // Remove from source column
+          return { ...col, todoIds: col.todoIds.filter(id => id !== taskId) };
+        } else if (col.id === targetColumnId) {
+          // Insert into target column
+          if (insertIndex !== undefined && insertIndex >= 0 && insertIndex <= col.todoIds.length) {
+            return {
+              ...col,
+              todoIds: [...col.todoIds.slice(0, insertIndex), taskId, ...col.todoIds.slice(insertIndex)]
+            };
+          } else {
+            return { ...col, todoIds: [...col.todoIds, taskId] };
+          }
+        }
+        return col;
       });
 
-      // Find the target column and add the tasks
-      const targetColumnIndex = updatedColumns.findIndex(col => col.id === targetColumnId);
-      if (targetColumnIndex !== -1) {
-        const targetColumn = updatedColumns[targetColumnIndex];
-        if (insertIndex !== undefined && insertIndex >= 0 && insertIndex <= targetColumn.todoIds.length) {
-          // Insert at specific index
-          const newTodoIds = [...targetColumn.todoIds.slice(0, insertIndex), ...taskIds, ...targetColumn.todoIds.slice(insertIndex)];
-          updatedColumns[targetColumnIndex] = { ...targetColumn, todoIds: newTodoIds };
-        } else {
-          // Append to end
-          updatedColumns[targetColumnIndex] = { ...targetColumn, todoIds: [...targetColumn.todoIds, ...taskIds] };
-        }
-      }
-
-      return updatedColumns;
-    });
-
-    // Preserve the selection after moving the tasks
-    // Keep existing selections that are not part of the moved tasks
-    setSelectedIds(prev => {
-      // Filter out the moved tasks from previous selection to avoid duplicates
-      const existingSelectionWithoutMovedTasks = prev.filter(id => !taskIds.includes(id));
-      // Return combined selection: existing non-moved selections + moved tasks
-      return [...existingSelectionWithoutMovedTasks, ...taskIds];
+      return newColumns;
     });
   };
+
+   const moveMultipleTasksToColumn = (taskIds: string[], targetColumnId: string, insertIndex?: number) => {
+     setColumns(prev => {
+       const newColumns = [...prev];
+ 
+       // Find and update source columns
+       const updatedColumns = newColumns.map(col => {
+         // Remove all taskIds from this column
+         const filteredTodoIds = col.todoIds.filter(id => !taskIds.includes(id));
+         return { ...col, todoIds: filteredTodoIds };
+       });
+ 
+       // Find the target column and add the tasks
+       const targetColumnIndex = updatedColumns.findIndex(col => col.id === targetColumnId);
+       if (targetColumnIndex !== -1) {
+         const targetColumn = updatedColumns[targetColumnIndex];
+         if (insertIndex !== undefined && insertIndex >= 0 && insertIndex <= targetColumn.todoIds.length) {
+           // Insert at specific index
+           const newTodoIds = [...targetColumn.todoIds.slice(0, insertIndex), ...taskIds, ...targetColumn.todoIds.slice(insertIndex)];
+           updatedColumns[targetColumnIndex] = { ...targetColumn, todoIds: newTodoIds };
+         } else {
+           // Append to end
+           updatedColumns[targetColumnIndex] = { ...targetColumn, todoIds: [...targetColumn.todoIds, ...taskIds] };
+         }
+       }
+ 
+       return updatedColumns;
+     });
+ 
+     // Preserve the selection after moving the tasks
+     // Keep existing selections that are not part of the moved tasks
+     setSelectedIds(prev => {
+       // Filter out the moved tasks from previous selection to avoid duplicates
+       const existingSelectionWithoutMovedTasks = prev.filter(id => !taskIds.includes(id));
+       // Return combined selection: existing non-moved selections + moved tasks
+       return [...existingSelectionWithoutMovedTasks, ...taskIds];
+     });
+   };
 
 
   return (
