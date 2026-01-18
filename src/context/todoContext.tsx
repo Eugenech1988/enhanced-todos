@@ -286,13 +286,17 @@ export const TodoContextProvider = ({ children }: { children: ReactNode }) => {
       )
     );
     
-    // If the task being moved was part of a multi-selection, preserve the selection
-    if (selectedIds.length > 1 && selectedIds.includes(taskId)) {
-      setSelectedIds(prev => prev);
-    } else {
-      // Otherwise, if it was a single selection, update accordingly
-      setSelectedIds([taskId]);
+    // Only update selection if the task was already selected
+    if (selectedIds.includes(taskId)) {
+      if (selectedIds.length > 1) {
+        // If multiple items were selected, keep the selection as is
+        setSelectedIds(prev => prev);
+      } else {
+        // If it was a single selection, keep it selected
+        setSelectedIds([taskId]);
+      }
     }
+    // If the task was not selected before, don't change the selection
   };
 
   const moveMultipleTasksToColumn = (taskIds: string[], targetColumnId: string, insertIndex?: number) => {
