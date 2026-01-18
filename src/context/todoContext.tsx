@@ -286,15 +286,11 @@ export const TodoContextProvider = ({ children }: { children: ReactNode }) => {
       )
     );
     
-    // Only update selection if the task was already selected
+    // Handle selection preservation appropriately
     if (selectedIds.includes(taskId)) {
-      if (selectedIds.length > 1) {
-        // If multiple items were selected, keep the selection as is
-        setSelectedIds(prev => prev);
-      } else {
-        // If it was a single selection, keep it selected
-        setSelectedIds([taskId]);
-      }
+      // If the task was already selected, preserve the selection
+      // This handles cases where the task was part of a multi-selection
+      setSelectedIds(prev => prev);
     }
     // If the task was not selected before, don't change the selection
   };
@@ -328,7 +324,13 @@ export const TodoContextProvider = ({ children }: { children: ReactNode }) => {
     });
     
     // Preserve the selection after moving the tasks
-    setSelectedIds(taskIds);
+    // Keep existing selections that are not part of the moved tasks
+    setSelectedIds(prev => {
+      // Filter out the moved tasks from previous selection to avoid duplicates
+      const existingSelectionWithoutMovedTasks = prev.filter(id => !taskIds.includes(id));
+      // Return combined selection: existing non-moved selections + moved tasks
+      return [...existingSelectionWithoutMovedTasks, ...taskIds];
+    });
   };
 
 

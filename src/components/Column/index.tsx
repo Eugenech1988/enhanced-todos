@@ -16,6 +16,7 @@ type ColumnProps = {
 export const Column = ({ column }: ColumnProps) => {
   const {
     todos,
+    columns,
     filter,
     searchQuery,
     moveTaskToColumn,
@@ -39,8 +40,22 @@ export const Column = ({ column }: ColumnProps) => {
         if (sourceData.type === 'todo' && sourceData.columnId !== column.id) {
           // Check if multiple items are selected and the source todo is among them
           if (selectedIds.length > 1 && selectedIds.includes((sourceData.todo as TTodo).id)) {
-            // Move all selected items to this column
-            moveMultipleTasksToColumn(selectedIds, column.id);
+            // Get all selected tasks that belong to the source column
+            const selectedTasksInSourceColumn = selectedIds.filter(id => {
+              // Find which column this task belongs to by checking all columns
+              return columns.some(col =>
+                col.id === sourceData.columnId &&
+                col.todoIds.includes(id)
+              );
+            });
+            
+            // Move only the selected items from the source column to this column
+            if (selectedTasksInSourceColumn.length > 0) {
+              moveMultipleTasksToColumn(selectedTasksInSourceColumn, column.id);
+            } else {
+              // If no selected tasks are in the source column, move just the source task
+              moveTaskToColumn((sourceData.todo as TTodo).id, column.id);
+            }
           } else {
             // Move only the single dragged item
             moveTaskToColumn((sourceData.todo as TTodo).id, column.id);
@@ -48,7 +63,7 @@ export const Column = ({ column }: ColumnProps) => {
         }
       },
     });
-  }, [column.id, moveTaskToColumn, moveMultipleTasksToColumn]);
+  }, [column.id, moveTaskToColumn, moveMultipleTasksToColumn, selectedIds, setSelectedIds, columns]);
 
   const filteredTodos = useMemo(() => {
     const query = searchQuery.toLowerCase();

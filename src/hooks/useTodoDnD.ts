@@ -98,10 +98,21 @@ export const useTodoMonitor = (reorderTodos: (startIndex: number, endIndex: numb
                         }
                     }
 
-                    // If multiple items are selected, move all selected items
+                    // If multiple items are selected, move only the selected items from the same source column
                     if (selectedIds.length > 1 && selectedIds.includes(sourceTodo.id)) {
-                        // Move all selected items to the destination column
-                        moveMultipleTasksToColumn(selectedIds, destinationColumnId, destinationIndex);
+                        // Get all selected tasks that belong to the source column
+                        const selectedTasksInSourceColumn = selectedIds.filter(id => {
+                            // Find which column this task belongs to
+                            return columns.some(col => col.id === sourceColumnId && col.todoIds.includes(id));
+                        });
+                        
+                        // Move only the selected items from the source column to the destination column
+                        if (selectedTasksInSourceColumn.length > 0) {
+                            moveMultipleTasksToColumn(selectedTasksInSourceColumn, destinationColumnId, destinationIndex);
+                        } else {
+                            // If no selected tasks are in the source column, move just the source task
+                            moveTaskToColumn(sourceTodo.id, destinationColumnId, destinationIndex);
+                        }
                     } else {
                         // Move only the single dragged item
                         moveTaskToColumn(sourceTodo.id, destinationColumnId, destinationIndex);
@@ -133,17 +144,27 @@ export const useTodoMonitor = (reorderTodos: (startIndex: number, endIndex: numb
                     destinationIndex -= 1;
                 }
 
-                // When reordering within the same column, we want to make sure
-                // only the dragged item is selected (if it wasn't already)
-                if (!selectedIds.includes(sourceTodo.id)) {
-                    // If the dragged item was not selected, clear all selections
-                    setSelectedIds([sourceTodo.id]);
-                } else if (selectedIds.length > 1) {
-                    // If multiple items were selected, select only the dragged item
-                    setSelectedIds([sourceTodo.id]);
+                // Check if there are multiple selected items in the same column
+                const selectedTasksInSameColumn = selectedIds.filter(id => {
+                    return columns.some(col => col.id === sourceColumnId && col.todoIds.includes(id));
+                });
+
+                if (selectedTasksInSameColumn.length > 1) {
+                    // Reorder all selected tasks in the column together
+                    // This is more complex and would require a different reorder function
+                    // For now, we'll just reorder the single dragged item but preserve selection
+                    reorderTodos(sourceIndex, destinationIndex, sourceColumnId);
+                } else {
+                    // When reordering within the same column, preserve the existing selection
+                    // Only update selection if the dragged item was not previously selected
+                    if (!selectedIds.includes(sourceTodo.id)) {
+                        // If the dragged item was not selected, add it to the existing selection
+                        setSelectedIds(prev => [...prev, sourceTodo.id]);
+                    }
+                    // If the item was already selected, keep the selection unchanged
+                    
+                    reorderTodos(sourceIndex, destinationIndex, sourceColumnId);
                 }
-                
-                reorderTodos(sourceIndex, destinationIndex, sourceColumnId);
             },
         });
     }, [reorderTodos, moveTaskToColumn, moveMultipleTasksToColumn, columns, selectedIds, setSelectedIds]);
