@@ -65,7 +65,7 @@ export const useTodoItemDnD = ({ todo, index, filter, searchQuery, columnId }: U
     return { elementRef, dropRef, isDragging, closestEdge };
 };
 
-export const useTodoMonitor = (reorderTodos: (startIndex: number, endIndex: number, columnId: string) => void, moveTaskToColumn: (taskId: string, targetColumnId: string, insertIndex?: number) => void, columns: any[]) => {
+export const useTodoMonitor = (reorderTodos: (startIndex: number, endIndex: number, columnId: string) => void, moveTaskToColumn: (taskId: string, targetColumnId: string, insertIndex?: number) => void, moveMultipleTasksToColumn: (taskIds: string[], targetColumnId: string, insertIndex?: number) => void, columns: any[], selectedIds: string[], setSelectedIds: (ids: string[]) => void) => {
     useEffect(() => {
         return monitorForElements({
             onDrop({ source, location }) {
@@ -78,6 +78,9 @@ export const useTodoMonitor = (reorderTodos: (startIndex: number, endIndex: numb
                 const sourceIndex = source.data.index as number;
                 const sourceColumnId = source.data.columnId as string;
                 const destinationColumnId = destinationData.columnId as string;
+                
+                // Get the source todo
+                const sourceTodo = source.data.todo as TTodo;
 
                 // If dragging to a different column, move the task
                 if (sourceColumnId !== destinationColumnId) {
@@ -95,11 +98,19 @@ export const useTodoMonitor = (reorderTodos: (startIndex: number, endIndex: numb
                         }
                     }
 
-                    moveTaskToColumn((source.data.todo as TTodo).id, destinationColumnId, destinationIndex);
+                    // If multiple items are selected, move all selected items
+                    if (selectedIds.length > 1 && selectedIds.includes(sourceTodo.id)) {
+                        // Move all selected items to the destination column
+                        moveMultipleTasksToColumn(selectedIds, destinationColumnId, destinationIndex);
+                    } else {
+                        // Move only the single dragged item
+                        moveTaskToColumn(sourceTodo.id, destinationColumnId, destinationIndex);
+                    }
                     return;
                 }
 
-                // Within the same column
+                // Within the same column - only move the single dragged item
+                // and potentially update selection to just this item
                 if (destinationData.type !== 'todo') {
                     return;
                 }
@@ -122,8 +133,18 @@ export const useTodoMonitor = (reorderTodos: (startIndex: number, endIndex: numb
                     destinationIndex -= 1;
                 }
 
+                // When reordering within the same column, we want to make sure
+                // only the dragged item is selected (if it wasn't already)
+                if (!selectedIds.includes(sourceTodo.id)) {
+                    // If the dragged item was not selected, clear all selections
+                    setSelectedIds([sourceTodo.id]);
+                } else if (selectedIds.length > 1) {
+                    // If multiple items were selected, select only the dragged item
+                    setSelectedIds([sourceTodo.id]);
+                }
+                
                 reorderTodos(sourceIndex, destinationIndex, sourceColumnId);
             },
         });
-    }, [reorderTodos, moveTaskToColumn, columns]);
+    }, [reorderTodos, moveTaskToColumn, moveMultipleTasksToColumn, columns, selectedIds, setSelectedIds]);
 };

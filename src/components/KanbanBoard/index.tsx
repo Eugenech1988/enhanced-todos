@@ -6,10 +6,13 @@ export const KanbanBoard = () => {
   const {
     columns,
     reorderTodos,
-    moveTaskToColumn
+    moveTaskToColumn,
+    moveMultipleTasksToColumn,
+    selectedIds,
+    setSelectedIds
   } = useTodo();
 
-  useTodoMonitor(reorderTodos, moveTaskToColumn, columns);
+  useTodoMonitor(reorderTodos, moveTaskToColumn, moveMultipleTasksToColumn, columns, selectedIds, setSelectedIds);
 
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 pb-4 min-h-[600px] w-full">

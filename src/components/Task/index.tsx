@@ -47,11 +47,17 @@ export const Task = ({todo, index, totalTodos, columnId, animationDelay = 0}: Ta
     }, 300);
   };
 
-  const handleSelect = () =>
+  const handleSelect = (e: React.MouseEvent) => {
+    // Prevent selection when clicking the grip icon for dragging
+    if ((e.target as HTMLElement).closest('[data-drag-handle]')) {
+      return;
+    }
+    
     setSelectedIds(selectedIds.includes(todo.id)
       ? selectedIds.filter(id => id !== todo.id)
       : [...selectedIds, todo.id]
     );
+  };
 
   const handleToggle = () => toggleTodo(todo.id);
   const handleEditClick = () => {
@@ -106,7 +112,7 @@ export const Task = ({todo, index, totalTodos, columnId, animationDelay = 0}: Ta
         )}
 
         <div className="flex items-center space-x-3">
-          <div className="cursor-grab active:cursor-grabbing hover:text-gray-600 text-gray-400 shrink-0">
+          <div className="cursor-grab active:cursor-grabbing hover:text-gray-600 text-gray-400 shrink-0" data-drag-handle>
             <GripVertical size={20}/>
           </div>
           <button onClick={handleSelect} className="flex items-center shrink-0" type="button">

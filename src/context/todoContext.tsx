@@ -33,6 +33,7 @@ type TTodoContextValue = {
   removeSelectedTodos: () => void;
   setCompletedForSelected: (completed: boolean) => void;
   moveTaskToColumn: (taskId: string, targetColumnId: string, insertIndex?: number) => void;
+  moveMultipleTasksToColumn: (taskIds: string[], targetColumnId: string, insertIndex?: number) => void;
 };
 
 const defaultTodoContext: TTodoContextValue = {
@@ -53,6 +54,7 @@ const defaultTodoContext: TTodoContextValue = {
   removeSelectedTodos: () => { },
   setCompletedForSelected: () => { },
   moveTaskToColumn: () => { },
+  moveMultipleTasksToColumn: () => { },
 };
 
 // Initial data structure with columns
@@ -283,6 +285,46 @@ export const TodoContextProvider = ({ children }: { children: ReactNode }) => {
           : col
       )
     );
+    
+    // If the task being moved was part of a multi-selection, preserve the selection
+    if (selectedIds.length > 1 && selectedIds.includes(taskId)) {
+      setSelectedIds(prev => prev);
+    } else {
+      // Otherwise, if it was a single selection, update accordingly
+      setSelectedIds([taskId]);
+    }
+  };
+
+  const moveMultipleTasksToColumn = (taskIds: string[], targetColumnId: string, insertIndex?: number) => {
+    setColumns(prev => {
+      const newColumns = [...prev];
+      
+      // Find and update source columns
+      const updatedColumns = newColumns.map(col => {
+        // Remove all taskIds from this column
+        const filteredTodoIds = col.todoIds.filter(id => !taskIds.includes(id));
+        return { ...col, todoIds: filteredTodoIds };
+      });
+      
+      // Find the target column and add the tasks
+      const targetColumnIndex = updatedColumns.findIndex(col => col.id === targetColumnId);
+      if (targetColumnIndex !== -1) {
+        const targetColumn = updatedColumns[targetColumnIndex];
+        if (insertIndex !== undefined && insertIndex >= 0 && insertIndex <= targetColumn.todoIds.length) {
+          // Insert at specific index
+          const newTodoIds = [...targetColumn.todoIds.slice(0, insertIndex), ...taskIds, ...targetColumn.todoIds.slice(insertIndex)];
+          updatedColumns[targetColumnIndex] = { ...targetColumn, todoIds: newTodoIds };
+        } else {
+          // Append to end
+          updatedColumns[targetColumnIndex] = { ...targetColumn, todoIds: [...targetColumn.todoIds, ...taskIds] };
+        }
+      }
+      
+      return updatedColumns;
+    });
+    
+    // Preserve the selection after moving the tasks
+    setSelectedIds(taskIds);
   };
 
 
@@ -306,6 +348,7 @@ export const TodoContextProvider = ({ children }: { children: ReactNode }) => {
         removeSelectedTodos,
         setCompletedForSelected,
         moveTaskToColumn,
+        moveMultipleTasksToColumn,
       }}
     >
       {children}
