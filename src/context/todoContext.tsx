@@ -65,9 +65,9 @@ const initialTodos: TTodo[] = [
 ];
 
 const initialColumns: TColumn[] = [
-  { id: crypto.randomUUID(), title: 'To Do', todoIds: [initialTodos[0].id, initialTodos[2].id] },
+  { id: crypto.randomUUID(), title: 'To Do', todoIds: [initialTodos[0].id, initialTodos[1].id, initialTodos[2].id] },
   { id: crypto.randomUUID(), title: 'In Progress', todoIds: [] },
-  { id: crypto.randomUUID(), title: 'Done', todoIds: [initialTodos[1].id] },
+  { id: crypto.randomUUID(), title: 'Done', todoIds: [] },
 ];
 
 const TodoContext = createContext<TTodoContextValue>(defaultTodoContext);
