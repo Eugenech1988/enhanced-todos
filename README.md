@@ -19,12 +19,13 @@
  
  ## Future Enhancements
  
- For future improvements, consider implementing:
+  For future improvements, consider implementing:
  
- - **Framer Motion** - For smoother animations and transitions, especially for component appearance and removal
- - **GSAP** - For advanced "smart" background effects and complex animations
- - **shadcn/ui** - For enhanced component styling and additional UI components
- - **Zustand** - For more efficient state management as the application grows
+  - **Column Management**: Allow users to reorder columns by dragging and dropping, add new columns, and remove existing columns
+  - **Framer Motion** - For smoother animations and transitions, especially for component appearance and removal
+  - **GSAP** - For advanced "smart" background effects and complex animations
+  - **shadcn/ui** - For enhanced component styling and additional UI components
+  - **Zustand** - For more efficient state management as the application grows
  
  ## Why I Use Tailwind CSS
  
