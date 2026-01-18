@@ -132,7 +132,7 @@ export const Column = ({ column }: ColumnProps) => {
   return (
     <div
       ref={columnRef}
-      className="flex flex-col bg-gray-100 rounded-lg shadow-sm p-4 min-h-[500px]"
+      className="flex flex-col bg-gray-100 rounded-lg shadow-sm p-4 min-h-[500px] max-w-sm w-full"
     >
       <div className="flex items-center justify-between mb-4">
         <h3 className="text-lg font-semibold text-gray-800">
