@@ -18,7 +18,7 @@ export const KanbanBoard = () => {
   useTodoMonitor(reorderTodos, moveTaskToColumn, moveMultipleTasksToColumn, columns, selectedIds, setSelectedIds, todos, filter, searchQuery);
 
   return (
-    <div className="grid grid-flow-row sm:grid-flow-col sm:auto-cols-[minmax(300px,_1fr)] overflow-x-auto gap-4 pb-4 h-full w-full">
+    <div className="grid grid-flow-row sm:grid-flow-col sm:auto-cols-[minmax(300px,_1fr)] overflow-x-auto gap-4 h-full w-full">
       {columns.map((column, index) => (
         <Column key={column.id} column={column} index={index} />
       ))}
