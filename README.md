@@ -99,28 +99,32 @@ In the project directory, you can run:
 
 ## Features
 
-- Add and delete todos
-- Mark todos as complete/incomplete
-- Search through todos with highlighted search terms
-- Filter todos (All, Completed)
-- Drag and drop to reorder todos (when viewing all todos)
+- Add and delete tasks
+- Mark tasks as complete/incomplete
+- Search through tasks with highlighted search terms
+- Filter tasks (All, Completed, Active)
+- Drag and drop to reorder tasks (when viewing all tasks)
+- Kanban board view with customizable columns
+- Move tasks between columns via drag and drop
 - Responsive design that works on all device sizes
-- Session storage persistence to save your todos between sessions
+- Session storage persistence to save your tasks between sessions
 - Smooth animations for dropdown menus and transitions
-- Fixed header with scrollable todo list area
-- Dedicated mass action buttons for selected todos
+- Fixed header with scrollable task list area
+- Dedicated mass action buttons for selected tasks
 
 ## Project Structure
 
 ```
 src/
 ├── components/           # Reusable UI components
-│   ├── AddTodo/          # Component for adding new todos
-│   ├── FilterDropdown/   # Component for filtering todos
-│   ├── SearchTodos/      # Component for searching todos
-│   ├── Todo/             # Component for individual todo items
-│   ├── TodoList/         # Component for displaying the list of todos
-│   └── MassActions/      # Component for mass operations on selected todos
+│   ├── AddTask/          # Component for adding new tasks
+│   ├── FilterDropdown/   # Component for filtering tasks
+│   ├── SearchTasks/      # Component for searching tasks
+│   ├── Task/             # Component for individual task items
+│   ├── TaskList/         # Component for displaying the list of tasks
+│   ├── KanbanBoard/      # Component for displaying tasks in Kanban style
+│   ├── Column/           # Component for Kanban columns
+│   └── MassActions/      # Component for mass operations on selected tasks
 ├── context/              # React context providers
 ├── docs/                 # Documentation files
 │   └── features.md       # Detailed documentation of features and functionality

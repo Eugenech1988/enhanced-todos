@@ -25,7 +25,6 @@ export const AddTask = () => {
       return { error: 'Task title is too long' };
     }
 
-    // Find the "To Do" column
     const todoColumn = columns.find(col => col.title.toLowerCase() === 'to do');
     const columnId = todoColumn?.id;
 

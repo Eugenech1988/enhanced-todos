@@ -48,7 +48,6 @@ export const Task = ({todo, index, totalTodos, columnId, animationDelay = 0}: Ta
   };
 
   const handleSelect = (e: React.MouseEvent) => {
-    // Prevent selection when clicking the grip icon for dragging
     if ((e.target as HTMLElement).closest('[data-drag-handle]')) {
       return;
     }

@@ -1,11 +1,11 @@
 import { useTodo } from '@/context/todoContext';
 import type { TTodo } from '@/context/todoContext';
 import { Task } from '@/components/Task';
-import { useMemo, useRef, useEffect } from 'react';
+import { useRef, useEffect } from 'react';
 import { dropTargetForElements } from '@atlaskit/pragmatic-drag-and-drop/element/adapter';
 
 type ColumnProps = {
- column: {
+  column: {
     id: string;
     title: string;
     todoIds: string[];
@@ -22,149 +22,148 @@ export const Column = ({ column }: ColumnProps) => {
     moveTaskToColumn,
     moveMultipleTasksToColumn,
     selectedIds,
-    setSelectedIds
+    setSelectedIds,
   } = useTodo();
-  
+
   const columnRef = useRef<HTMLDivElement>(null);
-  
-  // Set up drop target for the column container to allow dropping tasks from other columns
-  // This is needed for dropping on empty columns, but the monitor handles task-to-task drops
+
   useEffect(() => {
     const element = columnRef.current;
     if (!element) return;
-    
+
     return dropTargetForElements({
       element,
       getData: () => ({ type: 'column', columnId: column.id }),
       onDrop: (arg) => {
-        // This handles drops on the column container itself (empty area)
-        // The monitor handles drops on specific tasks within the column
-        
-        // To prevent duplicate handling, we'll only process drops on empty columns
-        // or when the drop occurred directly on the container
         const sourceData = arg.source.data;
-        
+
         if (sourceData.type === 'todo' && sourceData.columnId !== column.id) {
-          // Only process if the target column is empty or if the drop occurred directly on the container
-          // (This reduces chance of duplicate processing with the task-level monitor)
           if (column.todoIds.length === 0) {
-            // Check if multiple items are selected and the source todo is among them
-            if (selectedIds.length > 1 && selectedIds.includes((sourceData.todo as TTodo).id)) {
-              // Get all selected tasks that belong to the source column
-              const selectedTasksInSourceColumn = selectedIds.filter(id => {
-                // Find which column this task belongs to by checking all columns
-                return columns.some(col =>
-                  col.id === sourceData.columnId &&
-                  col.todoIds.includes(id)
-                );
-              });
-              
-              // Move only the selected items from the source column to this column
+            const todoId = (sourceData.todo as TTodo).id;
+
+            if (selectedIds.length > 1 && selectedIds.includes(todoId)) {
+              const selectedTasksInSourceColumn = selectedIds.filter(id =>
+                columns.some(
+                  col => col.id === sourceData.columnId && col.todoIds.includes(id)
+                )
+              );
+
               if (selectedTasksInSourceColumn.length > 0) {
                 moveMultipleTasksToColumn(selectedTasksInSourceColumn, column.id);
-              } else {
-                // If no selected tasks are in the source column, move just the source task
-                moveTaskToColumn((sourceData.todo as TTodo).id, column.id);
+                return;
               }
-            } else {
-              // Move only the single dragged item
-              moveTaskToColumn((sourceData.todo as TTodo).id, column.id);
             }
+
+            moveTaskToColumn(todoId, column.id);
           }
         }
       },
     });
-  }, [column.id, moveTaskToColumn, moveMultipleTasksToColumn, selectedIds, setSelectedIds, columns]);
+  }, [
+    column.id,
+    column.todoIds.length,
+    moveTaskToColumn,
+    moveMultipleTasksToColumn,
+    selectedIds,
+    columns,
+  ]);
 
-  const allVisibleTasksInColumnSelected = useMemo(() => {
-    const columnTodos = todos.filter(todo => column.todoIds.includes(todo.id));
-    const filteredColumnTodos = columnTodos.filter(todo => {
-      const matchesSearch = !searchQuery || todo.title.toLowerCase().includes(searchQuery.toLowerCase());
-      const matchesFilter =
-        filter === 'all' ||
-        (filter === 'active' && !todo.completed) ||
-        (filter === 'completed' && todo.completed);
-      return matchesSearch && matchesFilter;
-    });
+  // 👉 без useMemo
+  const allVisibleTasksInColumnSelected = (() => {
+    const filteredTodoIds = todos
+      .filter(todo => column.todoIds.includes(todo.id))
+      .filter(todo => {
+        const matchesSearch =
+          !searchQuery || todo.title.toLowerCase().includes(searchQuery.toLowerCase());
 
-    const filteredColumnTodoIds = filteredColumnTodos.map(todo => todo.id);
-    return filteredColumnTodoIds.length > 0 &&
-           filteredColumnTodoIds.every(todoId => selectedIds.includes(todoId));
-  }, [todos, column.todoIds, searchQuery, filter, selectedIds]);
+        const matchesFilter =
+          filter === 'all' ||
+          (filter === 'active' && !todo.completed) ||
+          (filter === 'completed' && todo.completed);
+
+        return matchesSearch && matchesFilter;
+      })
+      .map(todo => todo.id);
+
+    return (
+      filteredTodoIds.length > 0 &&
+      filteredTodoIds.every(id => selectedIds.includes(id))
+    );
+  })();
 
   const handleSelectAllInColumn = () => {
-    // Get all task IDs in this column that match the current filter
-    const columnTodos = todos.filter(todo => column.todoIds.includes(todo.id));
-    const filteredColumnTodos = columnTodos.filter(todo => {
-      const matchesSearch = !searchQuery || todo.title.toLowerCase().includes(searchQuery.toLowerCase());
-      const matchesFilter =
-        filter === 'all' ||
-        (filter === 'active' && !todo.completed) ||
-        (filter === 'completed' && todo.completed);
-      return matchesSearch && matchesFilter;
-    });
+    const visibleTodoIds = todos
+      .filter(todo => column.todoIds.includes(todo.id))
+      .filter(todo => {
+        const matchesSearch =
+          !searchQuery || todo.title.toLowerCase().includes(searchQuery.toLowerCase());
 
-    const todoIds = filteredColumnTodos.map(todo => todo.id);
-    
+        const matchesFilter =
+          filter === 'all' ||
+          (filter === 'active' && !todo.completed) ||
+          (filter === 'completed' && todo.completed);
+
+        return matchesSearch && matchesFilter;
+      })
+      .map(todo => todo.id);
+
     if (allVisibleTasksInColumnSelected) {
-      // If all are selected, clear them from selection
-      setSelectedIds(prev => prev.filter(id => !todoIds.includes(id)));
+      setSelectedIds(prev => prev.filter(id => !visibleTodoIds.includes(id)));
     } else {
-      // If not all are selected, select them all
-      setSelectedIds(prev => [...new Set([...prev, ...todoIds])]);
+      setSelectedIds(prev => [...new Set([...prev, ...visibleTodoIds])]);
     }
   };
 
   return (
-    <div ref={columnRef} className="flex flex-col bg-gray-100 rounded-lg shadow-sm p-4 min-h-[500px]">
+    <div
+      ref={columnRef}
+      className="flex flex-col bg-gray-100 rounded-lg shadow-sm p-4 min-h-[500px]"
+    >
       <div className="flex items-center justify-between mb-4">
-        <div className="flex items-center gap-2">
-          <h3 className="text-lg font-semibold text-gray-800">
-            {column.title}
-          </h3>
-        </div>
+        <h3 className="text-lg font-semibold text-gray-800">
+          {column.title}
+        </h3>
+
         <button
           onClick={handleSelectAllInColumn}
-          className="px-3 py-1.5 text-xs bg-indigo-100 text-indigo-700 rounded-md hover:bg-indigo-200 cursor-pointer transition-colors duration-200 shadow-sm"
+          className="px-3 py-1.5 text-xs bg-indigo-100 text-indigo-700 rounded-md hover:bg-indigo-200 transition-colors"
         >
           {allVisibleTasksInColumnSelected ? 'Clear All' : 'Select All'}
         </button>
       </div>
-      
+
       <div className="flex-1 overflow-y-auto pr-2">
         <ul className="space-y-2">
           {column.todoIds.length > 0 ? (
-            column.todoIds.map((todoId, actualIndex) => {
-              // Only render the task if it passes the filter conditions
+            column.todoIds.map((todoId, index) => {
               const todo = todos.find(t => t.id === todoId);
               if (!todo) return null;
 
-              // Check if task passes current filters
-              const query = searchQuery.toLowerCase();
-              const matchesSearch = !query || todo.title.toLowerCase().includes(query);
+              const matchesSearch =
+                !searchQuery ||
+                todo.title.toLowerCase().includes(searchQuery.toLowerCase());
+
               const matchesFilter =
                 filter === 'all' ||
                 (filter === 'active' && !todo.completed) ||
                 (filter === 'completed' && todo.completed);
 
-              if (!(matchesSearch && matchesFilter)) {
-                return null;
-              }
+              if (!matchesSearch || !matchesFilter) return null;
 
               return (
                 <Task
                   key={todo.id}
                   todo={todo}
-                  index={actualIndex}
-                  totalTodos={column.todoIds.length} // Use total number of tasks in the column, not filtered count
+                  index={index}
+                  totalTodos={column.todoIds.length}
                   columnId={column.id}
-                  animationDelay={actualIndex * 30}
+                  animationDelay={index * 30}
                 />
               );
             })
           ) : (
-            <div className="flex flex-col items-center justify-center py-10 text-gray-400 text-sm">
-              <p>No tasks</p>
+            <div className="flex items-center justify-center py-10 text-gray-400 text-sm">
+              No tasks
             </div>
           )}
         </ul>

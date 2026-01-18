@@ -1,5 +1,5 @@
 import { useTodo } from '@/context/todoContext';
-import { useState, useRef, type KeyboardEvent, Activity } from 'react';
+import { useState, useRef, type KeyboardEvent } from 'react';
 import { useClickOutside } from '@/hooks/useClickOutside';
 import { cn } from '@/utils';
 import { type TFilters } from '@/context/todoContext';
@@ -15,11 +15,11 @@ export const FilterDropdown = ({ className }: { className?: string }) => {
   useClickOutside(ref, () => setOpen(false));
 
   const toggle = () => {
-    setOpen(v => !v);
+    setOpen((v) => !v);
     setActiveIndex(-1);
   };
 
-  const selectFilter = (value: TFilters) => () => {
+  const selectFilter = (value: TFilters) => {
     if (value !== filter) {
       setFilter(value);
     }
@@ -41,11 +41,11 @@ export const FilterDropdown = ({ className }: { className?: string }) => {
         break;
       case 'ArrowDown':
         e.preventDefault();
-        setActiveIndex(prev => (prev < allowedFilters.length - 1 ? prev + 1 : 0));
+        setActiveIndex((prev) => (prev < allowedFilters.length - 1 ? prev + 1 : 0));
         break;
       case 'ArrowUp':
         e.preventDefault();
-        setActiveIndex(prev => (prev > 0 ? prev - 1 : allowedFilters.length - 1));
+        setActiveIndex((prev) => (prev > 0 ? prev - 1 : allowedFilters.length - 1));
         break;
       case 'Enter':
       case ' ':
@@ -79,32 +79,35 @@ export const FilterDropdown = ({ className }: { className?: string }) => {
         )}
       >
         {filter}
-        <ChevronDown size={16} className={cn('ml-2 transition-transform duration-200', open && 'rotate-180')} />
+        <ChevronDown
+          size={16}
+          className={cn('ml-2 transition-transform duration-200', open && 'rotate-180')}
+        />
       </button>
 
-      <Activity mode={open ? 'visible' : 'hidden'}>
+      {open && (
         <div
-          className={cn(
-            'absolute left-0 z-20 mt-2 w-48 rounded-lg bg-white py-1 shadow-xl border border-gray-100 transition-all duration-200 origin-top',
-            open ? 'opacity-100 scale-100' : 'opacity-0 scale-95 pointer-events-none'
-          )}
+          className="absolute left-0 z-20 mt-2 w-48 rounded-lg bg-white py-1 shadow-xl border border-gray-100 origin-top animate-in fade-in zoom-in-95 duration-100"
+          role="listbox"
         >
           {allowedFilters.map((f, index) => (
             <button
               key={f}
               type="button"
-              onClick={selectFilter(f)}
+              onClick={() => selectFilter(f)}
+              role="option"
+              aria-selected={filter === f}
               className={cn(
-                'block cursor-pointer hover:bg-gray-100 w-full px-4 py-2 text-md text-left capitalize transition-colors outline-none',
+                'block cursor-pointer w-full px-4 py-2 text-md text-left capitalize transition-colors outline-none',
                 filter === f ? 'bg-blue-50 text-blue-700' : 'text-gray-700',
-                activeIndex === index ? 'bg-gray-100' : ''
+                activeIndex === index ? 'bg-gray-100' : 'hover:bg-gray-50'
               )}
             >
               {f}
             </button>
           ))}
         </div>
-      </Activity>
+      )}
     </div>
   );
 };
