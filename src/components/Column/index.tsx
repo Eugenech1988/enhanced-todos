@@ -68,22 +68,6 @@ export const Column = ({ column }: ColumnProps) => {
     });
   }, [column.id, moveTaskToColumn, moveMultipleTasksToColumn, selectedIds, setSelectedIds, columns]);
 
-  const filteredTodos = useMemo(() => {
-    const query = searchQuery.toLowerCase();
-    const columnTodos = todos.filter(todo => column.todoIds.includes(todo.id));
-    
-    return columnTodos.filter(todo => {
-      const matchesSearch = !query || todo.title.toLowerCase().includes(query);
-      const matchesFilter =
-        filter === 'all' ||
-        (filter === 'active' && !todo.completed) ||
-        (filter === 'completed' && todo.completed);
-      return matchesSearch && matchesFilter;
-    });
-  }, [todos, column.todoIds, searchQuery, filter]);
-
-
-  // Determine if all visible tasks in this column are currently selected
   const allVisibleTasksInColumnSelected = useMemo(() => {
     const columnTodos = todos.filter(todo => column.todoIds.includes(todo.id));
     const filteredColumnTodos = columnTodos.filter(todo => {
@@ -141,17 +125,35 @@ export const Column = ({ column }: ColumnProps) => {
       
       <div className="flex-1 overflow-y-auto pr-2">
         <ul className="space-y-2">
-          {filteredTodos.length > 0 ? (
-            filteredTodos.map((todo, index) => (
-              <Task
-                key={todo.id}
-                todo={todo}
-                index={index}
-                totalTodos={filteredTodos.length}
-                columnId={column.id}
-                animationDelay={index * 30}
-              />
-            ))
+          {column.todoIds.length > 0 ? (
+            column.todoIds.map((todoId, actualIndex) => {
+              // Only render the task if it passes the filter conditions
+              const todo = todos.find(t => t.id === todoId);
+              if (!todo) return null;
+
+              // Check if task passes current filters
+              const query = searchQuery.toLowerCase();
+              const matchesSearch = !query || todo.title.toLowerCase().includes(query);
+              const matchesFilter =
+                filter === 'all' ||
+                (filter === 'active' && !todo.completed) ||
+                (filter === 'completed' && todo.completed);
+
+              if (!(matchesSearch && matchesFilter)) {
+                return null;
+              }
+
+              return (
+                <Task
+                  key={todo.id}
+                  todo={todo}
+                  index={actualIndex}
+                  totalTodos={column.todoIds.length} // Use total number of tasks in the column, not filtered count
+                  columnId={column.id}
+                  animationDelay={actualIndex * 30}
+                />
+              );
+            })
           ) : (
             <div className="flex flex-col items-center justify-center py-10 text-gray-400 text-sm">
               <p>No tasks</p>
