@@ -24,7 +24,10 @@ export const useTodoItemDnD = ({ todo, index, filter, searchQuery, columnId }: U
         // This allows reordering within the same column even when filtered
         return draggable({
             element,
-            getInitialData: () => ({ type: 'todo', todo, index, columnId }),
+            getInitialData: () => {
+                const data: DragData = { type: 'todo', todo: todo, index: index, columnId };
+                return data;
+            },
             onDragStart: () => setIsDragging(true),
             onDrop: () => setIsDragging(false),
         });
@@ -39,8 +42,9 @@ export const useTodoItemDnD = ({ todo, index, filter, searchQuery, columnId }: U
         return dropTargetForElements({
             element,
             getData: ({ input }) => {
+                const data: DragData = { type: 'todo', todo: todo, index: index, columnId };
                 return attachClosestEdge(
-                    { type: 'todo', todo, index, columnId },
+                    data,
                     { element, input, allowedEdges: ['top', 'bottom'] },
                 );
             },
@@ -64,6 +68,18 @@ export const useTodoItemDnD = ({ todo, index, filter, searchQuery, columnId }: U
     return { elementRef, dropRef, isDragging, closestEdge };
 };
 
+// Define types for drag and drop data
+type DragData = {
+  type: 'todo' | 'column';
+  todo?: TTodo;
+  index?: number;
+  columnId?: string;
+};
+
+type DropData = DragData & {
+  edge?: Edge;
+};
+
 // Add a ref to track the latest columns value
 export const useTodoMonitor = (reorderTodos: (startIndex: number, endIndex: number, columnId: string) => void, moveTaskToColumn: (taskId: string, targetColumnId: string, insertIndex?: number) => void, moveMultipleTasksToColumn: (taskIds: string[], targetColumnId: string, insertIndex?: number) => void, columns: any[], selectedIds: string[], setSelectedIds: React.Dispatch<React.SetStateAction<string[]>>) => {
     const columnsRef = useRef(columns);
@@ -81,7 +97,7 @@ export const useTodoMonitor = (reorderTodos: (startIndex: number, endIndex: numb
                     return;
                 }
 
-                const destinationData = destination.data;
+                const destinationData = destination.data as DropData;
                 const sourceIndex = source.data.index as number;
                 const sourceColumnId = source.data.columnId as string;
                 const destinationColumnId = destinationData.columnId as string;
@@ -100,7 +116,7 @@ export const useTodoMonitor = (reorderTodos: (startIndex: number, endIndex: numb
                         // Dropping on a task in another column
                         const closestEdgeOfTarget = extractClosestEdge(destinationData);
                         // Get the actual index of the destination task in the current column state
-                        const destinationTaskIndex = columnsRef.current.find(col => col.id === destinationColumnId)?.todoIds.indexOf(destinationData.todo.id) ?? destinationData.index as number;
+                        const destinationTaskIndex = columnsRef.current.find(col => col.id === destinationColumnId)?.todoIds.indexOf((destinationData.todo as TTodo).id) ?? (destinationData.index as number);
                         destinationIndex = destinationTaskIndex !== -1 ? destinationTaskIndex : destinationData.index as number;
                         if (closestEdgeOfTarget === 'bottom') {
                             destinationIndex += 1;
@@ -136,7 +152,7 @@ export const useTodoMonitor = (reorderTodos: (startIndex: number, endIndex: numb
                 }
 
                 // Get the actual index of the destination task in the current column state
-                const destinationTaskIndex = columnsRef.current.find(col => col.id === destinationColumnId)?.todoIds.indexOf(destinationData.todo.id) ?? destinationData.index as number;
+                const destinationTaskIndex = columnsRef.current.find(col => col.id === destinationColumnId)?.todoIds.indexOf((destinationData.todo as TTodo).id) ?? (destinationData.index as number);
                 const destinationElementIndex = destinationTaskIndex !== -1 ? destinationTaskIndex : destinationData.index as number;
 
                 const closestEdgeOfTarget = extractClosestEdge(destinationData);
