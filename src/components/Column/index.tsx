@@ -28,6 +28,7 @@ export const Column = ({ column }: ColumnProps) => {
   const columnRef = useRef<HTMLDivElement>(null);
   
   // Set up drop target for the column container to allow dropping tasks from other columns
+  // This is needed for dropping on empty columns, but the monitor handles task-to-task drops
   useEffect(() => {
     const element = columnRef.current;
     if (!element) return;
@@ -36,6 +37,8 @@ export const Column = ({ column }: ColumnProps) => {
       element,
       getData: () => ({ type: 'column', columnId: column.id }),
       onDrop: (arg) => {
+        // This handles drops on the column container itself (empty area)
+        // The monitor handles drops on specific tasks within the column
         const sourceData = arg.source.data;
         if (sourceData.type === 'todo' && sourceData.columnId !== column.id) {
           // Check if multiple items are selected and the source todo is among them
@@ -121,7 +124,7 @@ export const Column = ({ column }: ColumnProps) => {
   };
 
   return (
-    <div ref={columnRef} className="flex flex-col bg-gray-100 rounded-lg shadow-sm p-4 min-h-[500px] max-h-[calc(100vh-100px)]">
+    <div ref={columnRef} className="flex flex-col bg-gray-100 rounded-lg shadow-sm p-4 min-h-[500px]">
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-2">
           <h3 className="text-lg font-semibold text-gray-800">
@@ -138,17 +141,32 @@ export const Column = ({ column }: ColumnProps) => {
       
       <div className="flex-1 overflow-y-auto pr-2">
         <ul className="space-y-2">
-          {filteredTodos.length > 0 ? (
-            filteredTodos.map((todo, filteredIdx) => {
-              const actualIndex = column.todoIds.indexOf(todo.id);
+          {column.todoIds.length > 0 ? (
+            column.todoIds.map((todoId, actualIndex) => {
+              // Only render the task if it passes the filter conditions
+              const todo = todos.find(t => t.id === todoId);
+              if (!todo) return null;
+              
+              // Check if task passes current filters
+              const query = searchQuery.toLowerCase();
+              const matchesSearch = !query || todo.title.toLowerCase().includes(query);
+              const matchesFilter =
+                filter === 'all' ||
+                (filter === 'active' && !todo.completed) ||
+                (filter === 'completed' && todo.completed);
+              
+              if (!(matchesSearch && matchesFilter)) {
+                return null;
+              }
+              
               return (
                 <Task
                   key={todo.id}
                   todo={todo}
                   index={actualIndex}
-                  totalTodos={filteredTodos.length}
+                  totalTodos={column.todoIds.length} // Use total number of tasks in the column, not filtered count
                   columnId={column.id}
-                  animationDelay={filteredIdx * 30}
+                  animationDelay={actualIndex * 30}
                 />
               );
             })

@@ -105,8 +105,8 @@ export const Task = ({todo, index, totalTodos, columnId, animationDelay = 0}: Ta
         {closestEdge && (
           <div
             className={cn(
-              'absolute left-0 right-0 h-0.5 bg-blue-500 z-10',
-              closestEdge === 'top' ? 'top-0' : 'bottom-0'
+              'absolute left-0 right-0 h-1 bg-blue-500 z-10 rounded-full',
+              closestEdge === 'top' ? 'top-0 -translate-y-1/2' : 'bottom-0 translate-y-1/2'
             )}
           />
         )}

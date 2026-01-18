@@ -20,9 +20,8 @@ export const useTodoItemDnD = ({ todo, index, filter, searchQuery, columnId }: U
     useEffect(() => {
         const element = elementRef.current;
         if (!element) return;
-
-        if (filter !== 'all' || searchQuery) return;
-
+        // Enable drag functionality regardless of filter or search query
+        // This allows reordering within the same column even when filtered
         return draggable({
             element,
             getInitialData: () => ({ type: 'todo', todo, index, columnId }),
@@ -35,8 +34,8 @@ export const useTodoItemDnD = ({ todo, index, filter, searchQuery, columnId }: U
         const element = elementRef.current;
         if (!element) return;
 
-        if (filter !== 'all' || searchQuery) return;
-
+        // Enable drop functionality regardless of filter or search query
+        // This allows reordering within the same column even when filtered
         return dropTargetForElements({
             element,
             getData: ({ input }) => {
@@ -65,7 +64,15 @@ export const useTodoItemDnD = ({ todo, index, filter, searchQuery, columnId }: U
     return { elementRef, dropRef, isDragging, closestEdge };
 };
 
+// Add a ref to track the latest columns value
 export const useTodoMonitor = (reorderTodos: (startIndex: number, endIndex: number, columnId: string) => void, moveTaskToColumn: (taskId: string, targetColumnId: string, insertIndex?: number) => void, moveMultipleTasksToColumn: (taskIds: string[], targetColumnId: string, insertIndex?: number) => void, columns: any[], selectedIds: string[], setSelectedIds: React.Dispatch<React.SetStateAction<string[]>>) => {
+    const columnsRef = useRef(columns);
+
+    // Update the ref when columns change
+    useEffect(() => {
+        columnsRef.current = columns;
+    }, [columns]);
+
     useEffect(() => {
         return monitorForElements({
             onDrop({ source, location }) {
@@ -78,7 +85,7 @@ export const useTodoMonitor = (reorderTodos: (startIndex: number, endIndex: numb
                 const sourceIndex = source.data.index as number;
                 const sourceColumnId = source.data.columnId as string;
                 const destinationColumnId = destinationData.columnId as string;
-                
+
                 // Get the source todo
                 const sourceTodo = source.data.todo as TTodo;
 
@@ -88,11 +95,13 @@ export const useTodoMonitor = (reorderTodos: (startIndex: number, endIndex: numb
 
                     if (destinationData.type === 'column') {
                         // Dropping on empty column
-                        destinationIndex = columns.find(col => col.id === destinationColumnId)?.todoIds.length || 0;
+                        destinationIndex = columnsRef.current.find(col => col.id === destinationColumnId)?.todoIds.length || 0;
                     } else {
                         // Dropping on a task in another column
                         const closestEdgeOfTarget = extractClosestEdge(destinationData);
-                        destinationIndex = destinationData.index as number;
+                        // Get the actual index of the destination task in the current column state
+                        const destinationTaskIndex = columnsRef.current.find(col => col.id === destinationColumnId)?.todoIds.indexOf(destinationData.todo.id) ?? destinationData.index as number;
+                        destinationIndex = destinationTaskIndex !== -1 ? destinationTaskIndex : destinationData.index as number;
                         if (closestEdgeOfTarget === 'bottom') {
                             destinationIndex += 1;
                         }
@@ -103,9 +112,9 @@ export const useTodoMonitor = (reorderTodos: (startIndex: number, endIndex: numb
                         // Get all selected tasks that belong to the source column
                         const selectedTasksInSourceColumn = selectedIds.filter(id => {
                             // Find which column this task belongs to
-                            return columns.some(col => col.id === sourceColumnId && col.todoIds.includes(id));
+                            return columnsRef.current.some(col => col.id === sourceColumnId && col.todoIds.includes(id));
                         });
-                        
+
                         // Move only the selected items from the source column to the destination column
                         if (selectedTasksInSourceColumn.length > 0) {
                             moveMultipleTasksToColumn(selectedTasksInSourceColumn, destinationColumnId, destinationIndex);
@@ -126,7 +135,9 @@ export const useTodoMonitor = (reorderTodos: (startIndex: number, endIndex: numb
                     return;
                 }
 
-                const destinationElementIndex = destinationData.index as number;
+                // Get the actual index of the destination task in the current column state
+                const destinationTaskIndex = columnsRef.current.find(col => col.id === destinationColumnId)?.todoIds.indexOf(destinationData.todo.id) ?? destinationData.index as number;
+                const destinationElementIndex = destinationTaskIndex !== -1 ? destinationTaskIndex : destinationData.index as number;
 
                 const closestEdgeOfTarget = extractClosestEdge(destinationData);
 
@@ -146,7 +157,7 @@ export const useTodoMonitor = (reorderTodos: (startIndex: number, endIndex: numb
 
                 // Check if there are multiple selected items in the same column
                 const selectedTasksInSameColumn = selectedIds.filter(id => {
-                    return columns.some(col => col.id === sourceColumnId && col.todoIds.includes(id));
+                    return columnsRef.current.some(col => col.id === sourceColumnId && col.todoIds.includes(id));
                 });
 
                 if (selectedTasksInSameColumn.length > 1) {
@@ -164,8 +175,11 @@ export const useTodoMonitor = (reorderTodos: (startIndex: number, endIndex: numb
                     // If the item was already selected, keep the selection unchanged
                     
                     reorderTodos(sourceIndex, destinationIndex, sourceColumnId);
+                    
+                    // Clear the selection of the dragged item after reordering to prevent it from staying selected
+                    setSelectedIds(prev => prev.filter(id => id !== sourceTodo.id));
                 }
             },
         });
-    }, [reorderTodos, moveTaskToColumn, moveMultipleTasksToColumn, columns, selectedIds, setSelectedIds]);
+    }, [reorderTodos, moveTaskToColumn, moveMultipleTasksToColumn, selectedIds, setSelectedIds]); // Remove columns from dependency array
 };

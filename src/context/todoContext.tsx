@@ -211,8 +211,11 @@ export const TodoContextProvider = ({ children }: { children: ReactNode }) => {
 
       const column = newColumns[columnIndex];
       const newTodoIds = Array.from(column.todoIds);
-      const [removed] = newTodoIds.splice(startIndex, 1);
-      newTodoIds.splice(endIndex, 0, removed);
+      
+      // Remove the item at startIndex and store it
+      const [movedItem] = newTodoIds.splice(startIndex, 1);
+      // Insert the moved item at endIndex
+      newTodoIds.splice(endIndex, 0, movedItem);
 
       newColumns[columnIndex] = {
         ...column,
@@ -260,9 +263,9 @@ export const TodoContextProvider = ({ children }: { children: ReactNode }) => {
   const moveTaskToColumn = (taskId: string, targetColumnId: string, insertIndex?: number) => {
     // Find the source column
     const sourceColumn = columns.find(col => col.todoIds.includes(taskId));
-  
+
     if (!sourceColumn || sourceColumn.id === targetColumnId) return;
-  
+
     // Remove from source
     setColumns(prev =>
       prev.map(col =>
@@ -271,7 +274,7 @@ export const TodoContextProvider = ({ children }: { children: ReactNode }) => {
           : col
       )
     );
-  
+
     // Insert into target
     setColumns(prev =>
       prev.map(col =>
@@ -285,27 +288,19 @@ export const TodoContextProvider = ({ children }: { children: ReactNode }) => {
           : col
       )
     );
-    
-    // Handle selection preservation appropriately
-    if (selectedIds.includes(taskId)) {
-      // If the task was already selected, preserve the selection
-      // This handles cases where the task was part of a multi-selection
-      setSelectedIds(prev => prev);
-    }
-    // If the task was not selected before, don't change the selection
   };
 
   const moveMultipleTasksToColumn = (taskIds: string[], targetColumnId: string, insertIndex?: number) => {
     setColumns(prev => {
       const newColumns = [...prev];
-      
+
       // Find and update source columns
       const updatedColumns = newColumns.map(col => {
         // Remove all taskIds from this column
         const filteredTodoIds = col.todoIds.filter(id => !taskIds.includes(id));
         return { ...col, todoIds: filteredTodoIds };
       });
-      
+
       // Find the target column and add the tasks
       const targetColumnIndex = updatedColumns.findIndex(col => col.id === targetColumnId);
       if (targetColumnIndex !== -1) {
@@ -319,10 +314,10 @@ export const TodoContextProvider = ({ children }: { children: ReactNode }) => {
           updatedColumns[targetColumnIndex] = { ...targetColumn, todoIds: [...targetColumn.todoIds, ...taskIds] };
         }
       }
-      
+
       return updatedColumns;
     });
-    
+
     // Preserve the selection after moving the tasks
     // Keep existing selections that are not part of the moved tasks
     setSelectedIds(prev => {
