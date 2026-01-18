@@ -63,13 +63,48 @@ export const useTodoMonitor = (
   moveMultipleTasksToColumn: (taskIds: string[], targetColumnId: string, insertIndex?: number) => void,
   columns: any[],
   selectedIds: string[],
-  setSelectedIds: React.Dispatch<React.SetStateAction<string[]>>
+  setSelectedIds: React.Dispatch<React.SetStateAction<string[]>>,
+  todos: TTodo[],
+  filter: TFilters,
+  searchQuery: string
 ) => {
   const columnsRef = useRef(columns);
+  const todosRef = useRef(todos);
+  const filterRef = useRef(filter);
+  const searchQueryRef = useRef(searchQuery);
 
   useEffect(() => {
     columnsRef.current = columns;
   }, [columns]);
+
+  useEffect(() => {
+    todosRef.current = todos;
+  }, [todos]);
+
+  useEffect(() => {
+    filterRef.current = filter;
+  }, [filter]);
+
+  useEffect(() => {
+    searchQueryRef.current = searchQuery;
+  }, [searchQuery]);
+
+  const isTaskVisible = (taskId: string, columnId: string) => {
+    const todo = todosRef.current.find(t => t.id === taskId);
+    if (!todo) return false;
+
+    const matchesSearch =
+      !searchQueryRef.current || todo.title.toLowerCase().includes(searchQueryRef.current.toLowerCase());
+
+    const matchesFilter =
+      filterRef.current === 'all' ||
+      (filterRef.current === 'active' && !todo.completed) ||
+      (filterRef.current === 'completed' && todo.completed);
+
+    const inColumn = columnsRef.current.some(col => col.id === columnId && col.todoIds.includes(taskId));
+
+    return matchesSearch && matchesFilter && inColumn;
+  };
 
   useEffect(() => {
     return monitorForElements({
@@ -97,7 +132,7 @@ export const useTodoMonitor = (
 
           if (selectedIds.length > 1 && selectedIds.includes(sourceTodo.id)) {
             const selectedTasksInSourceColumn = selectedIds.filter(id =>
-              columnsRef.current.some(col => col.id === sourceColumnId && col.todoIds.includes(id))
+              isTaskVisible(id, sourceColumnId)
             );
             if (selectedTasksInSourceColumn.length > 0) {
               moveMultipleTasksToColumn(selectedTasksInSourceColumn, destinationColumnId, destinationIndex);
@@ -123,7 +158,7 @@ export const useTodoMonitor = (
         if (sourceIndex < destinationIndex) destinationIndex -= 1;
 
         const selectedTasksInSameColumn = selectedIds.filter(id =>
-          columnsRef.current.some(col => col.id === sourceColumnId && col.todoIds.includes(id))
+          isTaskVisible(id, sourceColumnId)
         );
 
         if (selectedTasksInSameColumn.length > 1) {
@@ -135,5 +170,5 @@ export const useTodoMonitor = (
         }
       },
     });
-  }, [reorderTodos, moveTaskToColumn, moveMultipleTasksToColumn, selectedIds, setSelectedIds]);
+  }, [reorderTodos, moveTaskToColumn, moveMultipleTasksToColumn, selectedIds, setSelectedIds, todos, filter, searchQuery]);
 };

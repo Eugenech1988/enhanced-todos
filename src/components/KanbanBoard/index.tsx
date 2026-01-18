@@ -9,10 +9,13 @@ export const KanbanBoard = () => {
     moveTaskToColumn,
     moveMultipleTasksToColumn,
     selectedIds,
-    setSelectedIds
+    setSelectedIds,
+    todos,
+    filter,
+    searchQuery
   } = useTodo();
 
-  useTodoMonitor(reorderTodos, moveTaskToColumn, moveMultipleTasksToColumn, columns, selectedIds, setSelectedIds);
+  useTodoMonitor(reorderTodos, moveTaskToColumn, moveMultipleTasksToColumn, columns, selectedIds, setSelectedIds, todos, filter, searchQuery);
 
   return (
     <div className="grid grid-flow-row sm:grid-flow-col sm:auto-cols-[minmax(300px,_1fr)] overflow-x-auto gap-4 pb-4 h-full w-full">

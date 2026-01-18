@@ -42,11 +42,24 @@ export const Column = ({ column }: ColumnProps) => {
             const todoId = (sourceData.todo as TTodo).id;
 
             if (selectedIds.length > 1 && selectedIds.includes(todoId)) {
-              const selectedTasksInSourceColumn = selectedIds.filter(id =>
-                columns.some(
+              const selectedTasksInSourceColumn = selectedIds.filter(id => {
+                const todo = todos.find(t => t.id === id);
+                if (!todo) return false;
+
+                const matchesSearch =
+                  !searchQuery || todo.title.toLowerCase().includes(searchQuery.toLowerCase());
+
+                const matchesFilter =
+                  filter === 'all' ||
+                  (filter === 'active' && !todo.completed) ||
+                  (filter === 'completed' && todo.completed);
+
+                const inColumn = columns.some(
                   col => col.id === sourceData.columnId && col.todoIds.includes(id)
-                )
-              );
+                );
+
+                return matchesSearch && matchesFilter && inColumn;
+              });
 
               if (selectedTasksInSourceColumn.length > 0) {
                 moveMultipleTasksToColumn(selectedTasksInSourceColumn, column.id);
@@ -66,9 +79,11 @@ export const Column = ({ column }: ColumnProps) => {
     moveMultipleTasksToColumn,
     selectedIds,
     columns,
+    todos,
+    filter,
+    searchQuery,
   ]);
 
-  // 👉 без useMemo
   const allVisibleTasksInColumnSelected = (() => {
     const filteredTodoIds = todos
       .filter(todo => column.todoIds.includes(todo.id))
