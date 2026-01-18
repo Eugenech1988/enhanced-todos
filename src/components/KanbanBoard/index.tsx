@@ -15,7 +15,7 @@ export const KanbanBoard = () => {
   useTodoMonitor(reorderTodos, moveTaskToColumn, moveMultipleTasksToColumn, columns, selectedIds, setSelectedIds);
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 pb-4 min-h-[600px] w-full">
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 pb-4 h-full w-full">
       {columns.map((column, index) => (
         <Column key={column.id} column={column} index={index} />
       ))}

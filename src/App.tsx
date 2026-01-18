@@ -14,7 +14,7 @@ export const App = () => {
           <AddTask/>
           <SearchTasks/>
         </div>
-        <div className="bg-white rounded-lg shadow-md p-6 max-h-[calc(100vh-220px)] flex flex-col relative w-full">
+        <div className="bg-white rounded-lg shadow-md p-6 max-h-[calc(100vh-151px)] flex flex-col relative w-full">
           <div className="mb-4 sm:mb-6">
             <h2 className="text-xl font-semibold mb-4 text-gray-700">Task Board</h2>
             <div className="flex flex-wrap justify-end items-center gap-2">
