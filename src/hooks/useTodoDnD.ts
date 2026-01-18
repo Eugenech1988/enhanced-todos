@@ -1,12 +1,12 @@
-import { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { draggable, dropTargetForElements, monitorForElements } from '@atlaskit/pragmatic-drag-and-drop/element/adapter';
 import { attachClosestEdge, extractClosestEdge, type Edge } from '@atlaskit/pragmatic-drag-and-drop-hitbox/closest-edge';
-import { type TTodo } from '@/context/todoContext';
+import { type TTodo, type TFilters } from '@/context/todoContext';
 
 type UseTodoItemDnDProps = {
     todo: TTodo;
     index: number;
-    filter: string;
+    filter: TFilters;
     searchQuery: string;
     columnId?: string;
 };
@@ -65,7 +65,7 @@ export const useTodoItemDnD = ({ todo, index, filter, searchQuery, columnId }: U
     return { elementRef, dropRef, isDragging, closestEdge };
 };
 
-export const useTodoMonitor = (reorderTodos: (startIndex: number, endIndex: number, columnId: string) => void, moveTaskToColumn: (taskId: string, targetColumnId: string, insertIndex?: number) => void, moveMultipleTasksToColumn: (taskIds: string[], targetColumnId: string, insertIndex?: number) => void, columns: any[], selectedIds: string[], setSelectedIds: (ids: string[]) => void) => {
+export const useTodoMonitor = (reorderTodos: (startIndex: number, endIndex: number, columnId: string) => void, moveTaskToColumn: (taskId: string, targetColumnId: string, insertIndex?: number) => void, moveMultipleTasksToColumn: (taskIds: string[], targetColumnId: string, insertIndex?: number) => void, columns: any[], selectedIds: string[], setSelectedIds: React.Dispatch<React.SetStateAction<string[]>>) => {
     useEffect(() => {
         return monitorForElements({
             onDrop({ source, location }) {
