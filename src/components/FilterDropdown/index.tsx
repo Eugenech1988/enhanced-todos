@@ -87,7 +87,7 @@ export const FilterDropdown = ({ className }: { className?: string }) => {
 
       {open && (
         <div
-          className="absolute left-0 z-20 mt-2 w-48 rounded-lg bg-white py-1 shadow-xl border border-gray-100 origin-top animate-in fade-in zoom-in-95 duration-100"
+          className="absolute right-0 md:left-0 md:right-[initial] z-20 mt-2 w-48 rounded-lg bg-white py-1 shadow-xl border border-gray-100 origin-top animate-in fade-in zoom-in-95 duration-100"
           role="listbox"
         >
           {allowedFilters.map((f, index) => (

@@ -13,6 +13,10 @@
  - **tailwind-merge** - A utility for merging Tailwind CSS classes with conflict resolution
  - **@atlaskit/pragmatic-drag-and-drop** - A drag and drop toolkit for building accessible, robust drag and drop experiences
  
+ ## Known Limitations
+ 
+ - **@atlaskit/pragmatic-drag-and-drop**: This library does not support mobile devices. In the future, it will need to be replaced with a library that supports mobile drag-and-drop functionality.
+ 
  ## Future Enhancements
  
  For future improvements, consider implementing:
