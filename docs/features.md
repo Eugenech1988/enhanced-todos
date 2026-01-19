@@ -188,3 +188,10 @@ This document describes the enhanced features added to the task application, par
 - The application maintains the same filtering and search capabilities in both views
 - Columns can be customized with different titles and configurations
 - Tasks maintain their state and properties when moved between columns
+
+### With Multi-line Task Editing
+- Tasks can now contain multiple lines of text using textarea instead of single-line input
+- The textarea automatically adjusts its height based on the content
+- When editing a task, pressing Enter saves the changes instead of creating a new line
+- The textarea includes proper styling to fit within the task component design
+- Multi-line tasks are properly displayed in both list and Kanban board views
