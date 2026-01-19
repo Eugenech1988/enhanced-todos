@@ -26,7 +26,7 @@ export const Task = ({todo, index, totalTodos, columnId, animationDelay = 0}: Ta
   const [isEditing, setIsEditing] = useState(false);
   const [editTitle, setEditTitle] = useState(todo.title);
   const [isRemoving, setIsRemoving] = useState(false);
-  const inputRef = useRef<HTMLInputElement>(null);
+  const inputRef = useRef<HTMLTextAreaElement>(null);
 
   const {elementRef, dropRef, isDragging, closestEdge} = useTodoItemDnD({
     todo,
@@ -37,7 +37,17 @@ export const Task = ({todo, index, totalTodos, columnId, animationDelay = 0}: Ta
   });
 
   useEffect(() => {
-    if (isEditing) inputRef.current?.focus();
+    if (isEditing) {
+      inputRef.current?.focus();
+      // Устанавливаем курсор в конец текста
+      setTimeout(() => {
+        const target = inputRef.current;
+        if (target) {
+          const length = target.value.length;
+          target.setSelectionRange(length, length);
+        }
+      }, 0);
+    }
   }, [isEditing]);
 
   const handleRemove = () => {
@@ -71,10 +81,22 @@ export const Task = ({todo, index, totalTodos, columnId, animationDelay = 0}: Ta
   };
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === 'Enter') handleEditSave();
+    if (e.key === 'Enter') {
+      e.preventDefault(); // предотвращаем перенос строки
+      handleEditSave();
+    }
     else if (e.key === 'Escape') {
       setEditTitle(todo.title);
       setIsEditing(false);
+    }
+  };
+
+  const handleTextareaChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    setEditTitle(e.target.value);
+    const target = e.target;
+    if (target) {
+      target.style.height = 'auto';
+      target.style.height = target.scrollHeight + 'px';
     }
   };
 
@@ -125,20 +147,20 @@ export const Task = ({todo, index, totalTodos, columnId, animationDelay = 0}: Ta
 
           <div className="flex-1 min-w-0 mr-3">
             {isEditing ? (
-              <input
+              <textarea
                 ref={inputRef}
-                type="text"
                 value={editTitle}
-                onChange={(e) => setEditTitle(e.target.value)}
+                onChange={handleTextareaChange}
                 onBlur={handleEditSave}
                 onKeyDown={handleKeyDown}
-                className="w-full outline-none bg-transparent border-b-2 border-blue-500 py-0.5"
+                className="w-full outline-none bg-transparent border-b-2 border-blue-500 py-0.5 resize-none overflow-hidden min-h-[24px]"
+                rows={1}
               />
             ) : (
               <span
                 onClick={handleEditClick}
                 className={cn(
-                  'block truncate text-gray-800 cursor-text hover:bg-gray-200/50 px-1 -mx-1 rounded transition-colors',
+                  'block text-gray-800 cursor-text hover:bg-gray-200/50 px-1 -mx-1 rounded transition-colors',
                   todo.completed && 'line-through text-gray-400'
                 )}
                 title={todo.title || ''}
