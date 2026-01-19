@@ -35,7 +35,7 @@ This document describes the enhanced features added to the task application, par
   - `clearSelectedTodos()`: Clears all selections
   - `removeSelectedTodos()`: Removes all selected tasks
   - `setCompletedForSelected(completed: boolean)`: Sets completion status for all selected tasks
-- Selection state persists using sessionStorage
+- Selection state persists using localStorage
 
 ### 2. Mass Operations
 - Added buttons for mass operations on selected tasks:
@@ -88,7 +88,7 @@ This document describes the enhanced features added to the task application, par
 
 #### Context Updates
 - Extended the TodoContext with selection-related functions
-- Added persistence for selection state using sessionStorage
+- Added persistence for selection state using localStorage
 - Maintained data integrity when todos are added/removed
 
 #### MassActions Component

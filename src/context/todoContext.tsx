@@ -91,7 +91,7 @@ const TodoContext = createContext<TTodoContextValue>(defaultTodoContext);
 
 export const TodoContextProvider = ({ children }: { children: ReactNode }) => {
   const [todos, setTodos] = useState<TTodo[]>(() => {
-    const saved = sessionStorage.getItem('todos');
+    const saved = localStorage.getItem('todos');
     if (saved) {
       return JSON.parse(saved).map((t: TTodo) => ({ ...t, createdAt: new Date(t.createdAt) }));
     }
@@ -99,7 +99,7 @@ export const TodoContextProvider = ({ children }: { children: ReactNode }) => {
   });
 
   const [columns, setColumns] = useState<TColumn[]>(() => {
-    const saved = sessionStorage.getItem('columns');
+    const saved = localStorage.getItem('columns');
     if (!saved) return initialColumns;
 
     const parsed: TColumn[] = JSON.parse(saved);
@@ -122,20 +122,20 @@ export const TodoContextProvider = ({ children }: { children: ReactNode }) => {
   const [searchQuery, setSearchQuery] = useState('');
   const [filter, setFilter] = useState<TFilters>('all');
   const [selectedIds, setSelectedIds] = useState<string[]>(() => {
-    const saved = sessionStorage.getItem('selectedIds');
+    const saved = localStorage.getItem('selectedIds');
     return saved ? JSON.parse(saved) : [];
   });
 
   useEffect(() => {
-    sessionStorage.setItem('todos', JSON.stringify(todos));
+    localStorage.setItem('todos', JSON.stringify(todos));
   }, [todos]);
 
   useEffect(() => {
-    sessionStorage.setItem('columns', JSON.stringify(columns));
+    localStorage.setItem('columns', JSON.stringify(columns));
   }, [columns]);
 
   useEffect(() => {
-    sessionStorage.setItem('selectedIds', JSON.stringify(selectedIds));
+    localStorage.setItem('selectedIds', JSON.stringify(selectedIds));
   }, [selectedIds]);
 
   const addTodo = (title: string, columnId?: string) => {

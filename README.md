@@ -46,24 +46,22 @@
  - **Flexibility**: Refs allow direct DOM manipulation when needed, providing more control over input behavior
  - **Debouncing**: I can easily implement debounced search functionality by accessing the input value via ref after a delay
  - **Cleaner State Management**: For search functionality, I update state only after user stops typing, reducing unnecessary state updates
-## Why I Use Session Storage for Persistence
+## Why I Use Local Storage for Persistence
 
-In this application, I chose to use sessionStorage for persisting todos between sessions for several important reasons:
+In this application, I chose to use localStorage for persisting todos between sessions for several important reasons:
 
-- **Session-Based Storage**: Data persists throughout the browser tab session and is cleared when the tab is closed, which is ideal for temporary task management
-- **Automatic Cleanup**: Unlike localStorage, data doesn't remain indefinitely, which prevents accumulation of old tasks that are no longer relevant
-- **Security**: Data is isolated to the specific browser tab and doesn't persist across different tabs or browser sessions
-- **Browser Compatibility**: sessionStorage is supported across all modern browsers and provides a simple API
+- **Persistence**: Data remains available even after closing and reopening the browser
+- **Browser Compatibility**: localStorage is supported across all modern browsers and provides a simple API
 - **No Server Dependencies**: Allows the application to maintain state without requiring backend services
 - **Performance**: Provides fast read/write operations for client-side data management
+- **Cross-Tab Consistency**: Data is shared across all tabs and windows for the same origin
 
-The choice of sessionStorage over localStorage is particularly important for a todo application because:
-- **Temporary Nature of Tasks**: Most todos have a limited lifespan and become irrelevant after a certain period
-- **Contextual Storage**: Tasks are typically associated with the current browsing session and are naturally cleared when the user closes the tab
-- **Privacy Protection**: Sensitive task information doesn't persist across browser sessions, enhancing user privacy
-- **Prevents Clutter**: Avoids accumulating outdated tasks that would require manual cleanup in localStorage
+The choice of localStorage over sessionStorage is particularly important for a todo application because:
+- **Permanent Storage**: Todos remain available between browser sessions and page reloads
+- **Data Retention**: Users don't lose their tasks when they refresh the page or close the browser
+- **Cross-Session Continuity**: Tasks persist across multiple browsing sessions until manually removed
 
-While localStorage would provide permanent storage, sessionStorage strikes the right balance between persistence and automatic cleanup for a todo application.
+This provides a better user experience by ensuring that users don't lose their tasks when they refresh the page or close the browser.
 
 ## Installation
 
@@ -112,7 +110,7 @@ In the project directory, you can run:
 - Kanban board view with customizable columns
 - Move tasks between columns via drag and drop
 - Responsive design that works on all device sizes
-- Session storage persistence to save your tasks between sessions
+- Local storage persistence to save your tasks between sessions
 - Smooth animations for dropdown menus and transitions
 - Fixed header with scrollable task list area
 - Dedicated mass action buttons for selected tasks
