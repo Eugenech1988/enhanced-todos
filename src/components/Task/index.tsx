@@ -178,10 +178,10 @@ export const Task = ({todo, index, totalTodos, columnId, animationDelay = 0}: Ta
               className={cn(
                 'transition-all duration-300',
                 todo.completed
-                  ? 'text-blue-500 fill-blue-500 dark:fill-none'
+                  ? 'fill-blue-500 text-white dark:text-blue-500 dark:fill-none'
                   : 'text-gray-300 dark:text-gray-400 fill-none'
               )}
-              color={todo.completed ? 'white' : 'currentColor'}
+              // color={todo.completed ? 'white' : 'currentColor'}
             />
           </button>
 
