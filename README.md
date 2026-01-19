@@ -114,6 +114,7 @@ In the project directory, you can run:
 - Smooth animations for dropdown menus and transitions
 - Fixed header with scrollable task list area
 - Dedicated mass action buttons for selected tasks
+- Support for multi-line tasks using textarea instead of single-line input
 
 ## Project Structure
 
