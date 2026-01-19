@@ -132,16 +132,16 @@ export const Column = ({ column }: ColumnProps) => {
   return (
     <div
       ref={columnRef}
-      className="flex flex-col bg-gray-100 rounded-lg shadow-sm p-4 min-h-[430px] w-full"
+      className="flex flex-col bg-gray-100 dark:bg-gray-700 rounded-lg shadow-sm p-4 min-h-[430px] w-full"
     >
       <div className="flex items-center justify-between mb-4">
-        <h3 className="text-lg font-semibold text-gray-800">
+        <h3 className="text-lg font-semibold text-gray-800 dark:text-gray-200">
           {column.title}
         </h3>
 
         <button
           onClick={handleSelectAllInColumn}
-          className="px-3 py-1.5 text-xs bg-indigo-100 text-indigo-700 rounded-md hover:bg-indigo-200 transition-colors"
+          className="px-3 py-1.5 text-xs bg-indigo-100 dark:bg-indigo-800 text-indigo-700 dark:text-indigo-300 rounded-md hover:bg-indigo-200 dark:hover:bg-indigo-700 transition-colors"
         >
           {allVisibleTasksInColumnSelected ? 'Clear All' : 'Select All'}
         </button>
@@ -177,7 +177,7 @@ export const Column = ({ column }: ColumnProps) => {
               );
             })
           ) : (
-            <div className="flex items-center justify-center py-10 text-gray-400 text-sm">
+            <div className="flex items-center justify-center py-10 text-gray-400 dark:text-gray-500 text-sm">
               No tasks
             </div>
           )}

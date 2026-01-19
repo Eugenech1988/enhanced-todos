@@ -20,7 +20,7 @@ export const MassActions = ({ selectedCount }: MassActionsProps) => {
       <div className="flex flex-wrap gap-2 justify-end">
         <button
           disabled
-          className="px-3 py-1 text-sm bg-gray-300 text-gray-500 rounded cursor-not-allowed transition-colors duration-200 min-w-[120px]"
+          className="px-3 py-1 text-sm bg-gray-300 dark:bg-gray-600 text-gray-500 dark:text-gray-400 rounded cursor-not-allowed transition-colors duration-200 min-w-[120px]"
         >
           No items selected
         </button>

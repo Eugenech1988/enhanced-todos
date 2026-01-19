@@ -104,7 +104,7 @@ export const Task = ({todo, index, totalTodos, columnId, animationDelay = 0}: Ta
     if (!searchQuery) return todo.title;
     return todo.title.split(new RegExp(`(${searchQuery})`, 'gi')).map((part, i) =>
       part.toLowerCase() === searchQuery.toLowerCase()
-        ? <span key={i} className="bg-yellow-200 text-gray-900 rounded-sm px-0.5">{part}</span>
+        ? <span key={i} className="bg-yellow-200 dark:bg-yellow-30 text-gray-900 rounded-sm px-0.5">{part}</span>
         : part
     );
   };
@@ -114,9 +114,9 @@ export const Task = ({todo, index, totalTodos, columnId, animationDelay = 0}: Ta
       <div
         ref={dropRef}
         className={cn(
-          'p-3 relative bg-white transition-all',
-          'hover:bg-gray-50',
-          index !== totalTodos - 1 && 'border-b border-gray-200',
+          'p-3 relative bg-white dark:bg-gray-800 transition-all',
+          'hover:bg-gray-50 dark:hover:bg-gray-700',
+          index !== totalTodos - 1 && 'border-b border-gray-200 dark:border-gray-600',
           isDragging && 'opacity-50',
           isRemoving ? 'todo-exit' : 'todo-enter',
           'animate-in fade-in slide-in-from-top-2 duration-300 ease-out'
@@ -133,13 +133,13 @@ export const Task = ({todo, index, totalTodos, columnId, animationDelay = 0}: Ta
         )}
 
         <div className="flex items-center space-x-3">
-          <div className="cursor-grab active:cursor-grabbing hover:text-gray-600 text-gray-400 shrink-0" data-drag-handle>
+          <div className="cursor-grab active:cursor-grabbing hover:text-gray-600 dark:hover:text-gray-300 text-gray-400 dark:text-gray-500 shrink-0" data-drag-handle>
             <GripVertical size={20}/>
           </div>
           <button onClick={handleSelect} className="flex items-center shrink-0" type="button">
             <div className={cn(
               'w-5 h-5 flex items-center cursor-pointer justify-center rounded transition-colors duration-200',
-              selectedIds.includes(todo.id) ? 'bg-indigo-500' : 'border border-gray-400'
+              selectedIds.includes(todo.id) ? 'bg-indigo-500' : 'border border-gray-400 dark:border-gray-500'
             )}>
               {selectedIds.includes(todo.id) && <Check size={14} color="white"/>}
             </div>
@@ -160,8 +160,8 @@ export const Task = ({todo, index, totalTodos, columnId, animationDelay = 0}: Ta
               <span
                 onClick={handleEditClick}
                 className={cn(
-                  'block text-gray-800 cursor-text hover:bg-gray-200/50 px-1 -mx-1 rounded transition-colors',
-                  todo.completed && 'line-through text-gray-400'
+                  'block text-gray-800 dark:text-gray-200 cursor-text hover:bg-gray-200/50 dark:hover:bg-gray-600/50 px-1 -mx-1 rounded transition-colors',
+                  todo.completed && 'line-through text-gray-400 dark:text-gray-500'
                 )}
                 title={todo.title || ''}
               >
@@ -177,7 +177,9 @@ export const Task = ({todo, index, totalTodos, columnId, animationDelay = 0}: Ta
               size={24}
               className={cn(
                 'transition-all duration-300',
-                todo.completed ? 'text-blue-500 fill-blue-500' : 'text-gray-300 fill-none'
+                todo.completed
+                  ? 'text-blue-500 fill-blue-500 dark:fill-none'
+                  : 'text-gray-300 dark:text-gray-400 fill-none'
               )}
               color={todo.completed ? 'white' : 'currentColor'}
             />
@@ -185,7 +187,7 @@ export const Task = ({todo, index, totalTodos, columnId, animationDelay = 0}: Ta
 
           <button
             onClick={handleRemove}
-            className="text-gray-400 cursor-pointer hover:text-red-500 transition-colors p-1 shrink-0"
+            className="text-gray-400 dark:text-gray-500 cursor-pointer hover:text-red-500 dark:hover:text-red-400 transition-colors p-1 shrink-0"
             aria-label="Delete task"
           >
             <Trash2 size={18}/>

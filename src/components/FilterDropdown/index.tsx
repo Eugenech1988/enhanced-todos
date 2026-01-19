@@ -75,7 +75,7 @@ export const FilterDropdown = ({ className }: { className?: string }) => {
         aria-expanded={open}
         className={cn(
           'flex w-full cursor-pointer items-center justify-between px-4 py-2 text-md font-medium capitalize rounded-md border shadow-sm transition-all outline-none focus:border-blue-500',
-          open ? 'border-blue-500 text-blue-600' : 'border-gray-300 text-gray-700 hover:bg-gray-50'
+          open ? 'border-blue-500 dark:border-blue-400 text-blue-600 dark:text-blue-400' : 'border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700'
         )}
       >
         {filter}
@@ -87,7 +87,7 @@ export const FilterDropdown = ({ className }: { className?: string }) => {
 
       {open && (
         <div
-          className="absolute right-0 md:left-0 md:right-[initial] z-20 mt-2 w-48 rounded-lg bg-white py-1 shadow-xl border border-gray-100 origin-top animate-in fade-in zoom-in-95 duration-100"
+          className="absolute right-0 md:left-0 md:right-[initial] z-20 mt-2 w-48 rounded-lg bg-white dark:bg-gray-800 py-1 shadow-xl border border-gray-100 dark:border-gray-600 origin-top animate-in fade-in zoom-in-95 duration-100"
           role="listbox"
         >
           {allowedFilters.map((f, index) => (
@@ -99,8 +99,8 @@ export const FilterDropdown = ({ className }: { className?: string }) => {
               aria-selected={filter === f}
               className={cn(
                 'block cursor-pointer w-full px-4 py-2 text-md text-left capitalize transition-colors outline-none',
-                filter === f ? 'bg-blue-50 text-blue-700' : 'text-gray-700',
-                activeIndex === index ? 'bg-gray-100' : 'hover:bg-gray-50'
+                filter === f ? 'bg-blue-50 dark:bg-blue-900 text-blue-700 dark:text-blue-300' : 'text-gray-700 dark:text-gray-300',
+                activeIndex === index ? 'bg-gray-100 dark:bg-gray-700' : 'hover:bg-gray-50 dark:hover:bg-gray-600'
               )}
             >
               {f}

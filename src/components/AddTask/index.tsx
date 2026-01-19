@@ -53,18 +53,19 @@ export const AddTask = () => {
             className={cn(
               'peer w-full px-4 py-2 border rounded-lg transition-all',
               'placeholder-transparent focus:outline-none focus:ring-blue-500',
-              'border-gray-300 focus:border-blue-500',
-              showError && 'border-red-500 animate-shake'
+              'border-gray-300 dark:border-gray-600 focus:border-blue-500 dark:focus:border-blue-400',
+              'bg-white dark:bg-gray-800',
+              showError && 'border-red-500 dark:border-red-400 animate-shake'
             )}
           />
 
           <label
             className={cn(
-              'absolute left-4 bg-white px-1 transition-all',
-              'top-2 text-base text-gray-400',
+              'absolute left-4 bg-white dark:bg-gray-800 px-1 transition-all',
+              'top-2 text-base text-gray-400 dark:text-gray-500',
               'peer-focus:-top-2.5 peer-focus:text-sm peer-focus:text-blue-500',
               'peer-not-placeholder-shown:-top-2.5 peer-not-placeholder-shown:text-sm',
-              showError && 'text-red-500'
+              showError && 'text-red-500 dark:text-red-400'
             )}
           >
             Enter a new task
@@ -74,14 +75,14 @@ export const AddTask = () => {
         <button
           type="submit"
           disabled={isPending}
-          className="px-4 py-2 cursor-pointer bg-blue-500 text-white rounded-lg hover:bg-blue-600 disabled:opacity-50 transition"
+          className="px-4 py-2 cursor-pointer bg-blue-500 dark:bg-blue-600 text-white rounded-lg hover:bg-blue-600 dark:hover:bg-blue-700 disabled:opacity-50 transition"
         >
           {isPending ? 'Adding…' : 'Add Task'}
         </button>
       </div>
 
       {showError && (
-        <p className="mt-2 text-sm text-red-500">
+        <p className="mt-2 text-sm text-red-500 dark:text-red-400">
           {state.error}
         </p>
       )}

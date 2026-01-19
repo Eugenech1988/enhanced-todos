@@ -31,14 +31,15 @@ export const SearchTasks = () => {
           placeholder=" "
           className={cn(
             'peer w-full px-4 leading-[42px] pl-10 border rounded-lg transition-all',
-            'border-gray-300 focus:border-blue-500 focus:outline-none',
+            'border-gray-300 dark:border-gray-600 focus:border-blue-500 dark:focus:border-blue-400 focus:outline-none',
+            'bg-white dark:bg-gray-800',
             'peer-[:not(:placeholder-shown)]:border-blue-500'
           )}
         />
 
         <Search
           className={cn(
-            'absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 pointer-events-none transition-colors duration-200 text-gray-400',
+            'absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 pointer-events-none transition-colors duration-200 text-gray-400 dark:text-gray-500',
             'peer-focus:text-blue-500',
             'peer-[:not(:placeholder-shown)]:text-blue-500'
           )}
@@ -47,8 +48,8 @@ export const SearchTasks = () => {
         <label
           htmlFor="search-task-input"
           className={cn(
-            'absolute transition-all bg-white px-1 pointer-events-none cursor-text',
-            'left-10 top-2 text-base text-gray-400',
+            'absolute transition-all bg-white dark:bg-gray-800 px-1 pointer-events-none cursor-text',
+            'left-10 top-2 text-base text-gray-400 dark:text-gray-500',
             'peer-placeholder-shown:top-2 peer-placeholder-shown:left-10 peer-placeholder-shown:text-base',
             'peer-focus:-top-2.5 peer-focus:left-3 peer-focus:text-sm peer-focus:text-blue-500',
             'peer-[:not(:placeholder-shown)]:-top-2.5 peer-[:not(:placeholder-shown)]:left-3 peer-[:not(:placeholder-shown)]:text-sm peer-[:not(:placeholder-shown)]:text-blue-500'
