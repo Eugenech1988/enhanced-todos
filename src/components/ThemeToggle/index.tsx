@@ -28,11 +28,13 @@ export const ThemeToggle = () => {
     >
       {theme === 'light' ? (
         <Moon
+          data-testid="moon-icon"
           size={20}
           className="text-blue-500 dark:text-gray-300 transition-transform duration-200 hover:rotate-12"
         />
       ) : (
         <Sun
+          data-testid="sun-icon"
           size={20}
           className="text-yellow-400 transition-transform duration-200 hover:-rotate-12"
         />
