@@ -27,6 +27,7 @@ export const SearchTasks = () => {
           ref={inputRef}
           type="text"
           id="search-task-input"
+          data-testid="search-input"
           onChange={handleChange}
           placeholder=" "
           className={cn(
