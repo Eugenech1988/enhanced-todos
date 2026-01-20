@@ -171,6 +171,7 @@ export const Task = ({todo, index, totalTodos, columnId, animationDelay = 0}: Ta
           </div>
 
           <button onClick={handleToggle}
+                  data-testid="toggle-completed"
                   className="flex items-center cursor-pointer shrink-0 active:scale-90 transition-transform"
                   type="button">
             <CircleCheck
@@ -187,6 +188,7 @@ export const Task = ({todo, index, totalTodos, columnId, animationDelay = 0}: Ta
 
           <button
             onClick={handleRemove}
+            data-testid="delete-task"
             className="text-gray-400 dark:text-gray-500 cursor-pointer hover:text-red-500 dark:hover:text-red-400 transition-colors p-1 shrink-0"
             aria-label="Delete task"
           >
