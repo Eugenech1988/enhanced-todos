@@ -71,6 +71,7 @@ export const FilterDropdown = ({ className }: { className?: string }) => {
       <button
         type="button"
         onClick={toggle}
+        data-testid="filter-toggle"
         aria-haspopup="listbox"
         aria-expanded={open}
         className={cn(
@@ -89,11 +90,13 @@ export const FilterDropdown = ({ className }: { className?: string }) => {
         <div
           className="absolute right-0 md:left-0 md:right-[initial] z-20 mt-2 w-48 rounded-lg bg-white dark:bg-gray-800 py-1 shadow-xl border border-gray-100 dark:border-gray-600 origin-top animate-in fade-in zoom-in-95 duration-100"
           role="listbox"
+          data-testid="filter-listbox"
         >
           {allowedFilters.map((f, index) => (
             <button
               key={f}
               type="button"
+              data-testid={`filter-option-${f}`}
               onClick={() => selectFilter(f)}
               role="option"
               aria-selected={filter === f}

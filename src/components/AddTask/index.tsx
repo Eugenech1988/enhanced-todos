@@ -42,7 +42,7 @@ export const AddTask = () => {
   const showError = Boolean(state.error);
 
   return (
-    <form action={formAction} className="mb-4">
+    <form action={formAction} data-testid="add-task-form" className="mb-4">
       <div className="flex flex-col sm:flex-row gap-2">
         <div className="relative flex-1">
           <input
@@ -50,6 +50,7 @@ export const AddTask = () => {
             name="inputValue"
             placeholder=" "
             disabled={isPending}
+            data-testid="add-task-input"
             className={cn(
               'peer w-full px-4 py-2 border rounded-lg transition-all',
               'placeholder-transparent focus:outline-none focus:ring-blue-500',
@@ -75,6 +76,7 @@ export const AddTask = () => {
         <button
           type="submit"
           disabled={isPending}
+          data-testid="add-task-button"
           className="px-4 py-2 cursor-pointer bg-blue-500 dark:bg-blue-600 text-white rounded-lg hover:bg-blue-600 dark:hover:bg-blue-700 disabled:opacity-50 transition"
         >
           {isPending ? 'Adding…' : 'Add Task'}
