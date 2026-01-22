@@ -3,7 +3,6 @@ import { render, screen, fireEvent } from '@testing-library/react';
 import { TodoContextProvider } from '@/context/todoContext';
 import { AddTask } from './index';
 
-// Mock the useTodo hook
 const mockAddTodo = vi.fn();
 
 vi.mock('@/context/todoContext', async () => {
@@ -60,7 +59,6 @@ describe('AddTask', () => {
     fireEvent.change(input, { target: { value: 'Test task' } });
     fireEvent.click(button);
     
-    // Wait for form submission
     await new Promise(resolve => setTimeout(resolve, 0));
     
     expect(mockAddTodo).toHaveBeenCalledWith('Test task', 'todo-column-id');
@@ -72,7 +70,6 @@ describe('AddTask', () => {
     const button = screen.getByTestId('add-task-button');
     fireEvent.click(button);
     
-    // Wait for validation
     await new Promise(resolve => setTimeout(resolve, 0));
     
     const errorElement = screen.getByText('Task title is required');
@@ -89,7 +86,6 @@ describe('AddTask', () => {
     fireEvent.change(input, { target: { value: longTitle } });
     fireEvent.click(button);
     
-    // Wait for validation
     await new Promise(resolve => setTimeout(resolve, 0));
     
     const errorElement = screen.getByText('Task title is too long');
@@ -107,7 +103,6 @@ describe('AddTask', () => {
     
     fireEvent.click(button);
     
-    // Wait for form reset
     await new Promise(resolve => setTimeout(resolve, 0));
     
     expect(input).toHaveValue('');
@@ -122,7 +117,6 @@ describe('AddTask', () => {
     fireEvent.change(input, { target: { value: 'Test task' } });
     fireEvent.click(button);
     
-    // Button should show "Adding..." text while submitting
     expect(button).toBeDisabled();
     expect(button).toHaveTextContent('Adding…');
   });
