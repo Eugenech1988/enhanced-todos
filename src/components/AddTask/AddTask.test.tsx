@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from 'vitest';
-import { render, screen, fireEvent } from '@testing-library/react';
+import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { TodoContextProvider } from '@/context/todoContext';
 import { AddTask } from './index';
 
@@ -70,10 +70,9 @@ describe('AddTask', () => {
     const button = screen.getByTestId('add-task-button');
     fireEvent.click(button);
     
-    await new Promise(resolve => setTimeout(resolve, 0));
-    
-    const errorElement = screen.getByText('Task title is required');
-    expect(errorElement).toBeInTheDocument();
+    await waitFor(() => {
+      expect(screen.getByText('Task title is required')).toBeInTheDocument();
+    });
   });
 
   it('shows error when task title is too long', async () => {
@@ -86,10 +85,9 @@ describe('AddTask', () => {
     fireEvent.change(input, { target: { value: longTitle } });
     fireEvent.click(button);
     
-    await new Promise(resolve => setTimeout(resolve, 0));
-    
-    const errorElement = screen.getByText('Task title is too long');
-    expect(errorElement).toBeInTheDocument();
+    await waitFor(() => {
+      expect(screen.getByText('Task title is too long')).toBeInTheDocument();
+    });
   });
 
   it('resets form after successful submission', async () => {
