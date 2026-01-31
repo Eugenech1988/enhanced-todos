@@ -12,7 +12,7 @@ vi.mock('@/components/Column', () => ({
   ),
 }));
 
-vi.mock('@/hooks/useTodoDnD', () => ({
+vi.mock('@/hooks/useDnD', () => ({
   useTodoMonitor: () => {}, // Empty mock since we're not testing DnD functionality in this component
 }));
 

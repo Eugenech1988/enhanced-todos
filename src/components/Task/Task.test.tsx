@@ -28,7 +28,7 @@ vi.mock('@/context/todoContext.tsx', async () => {
   };
 });
 
-vi.mock('@/hooks/useTodoDnD', () => ({
+vi.mock('@/hooks/useDnD', () => ({
   useTodoItemDnD: () => ({
     elementRef: { current: null },
     dropRef: { current: null },

@@ -1,7 +1,7 @@
 import { type TTodo, useTodo } from '@/context/todoContext.tsx';
 import { Trash2, CircleCheck, Check, GripVertical } from 'lucide-react';
 import { cn } from '@/utils';
-import { useTodoItemDnD } from '@/hooks/useTodoDnD';
+import { useTodoItemDnD } from '@/hooks/useDnD';
 import { useState, useRef, useEffect } from 'react';
 
 type TaskProps = {

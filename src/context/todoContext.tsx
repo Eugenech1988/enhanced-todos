@@ -34,6 +34,7 @@ type TTodoContextValue = {
   filter: TFilters;
   setFilter: (filter: TFilters) => void;
   reorderTodos: (startIndex: number, endIndex: number, columnId: string) => void;
+  reorderColumns: (startIndex: number, endIndex: number) => void;
   updateTodo: (id: string, title: string) => void;
   selectedIds: string[];
   setSelectedIds: Dispatch<SetStateAction<string[]>>;
@@ -60,6 +61,7 @@ const defaultTodoContext: TTodoContextValue = {
   filter: 'all',
   setFilter: () => {},
   reorderTodos: () => {},
+  reorderColumns: () => {},
   selectedIds: [],
   setSelectedIds: () => {},
   clearSelectedTodos: () => {},
@@ -180,6 +182,15 @@ export const TodoContextProvider = ({ children }: { children: ReactNode }) => {
     });
   };
 
+  const reorderColumns = (startIndex: number, endIndex: number) => {
+    setColumns(p => {
+      const cols = [...p];
+      const [moved] = cols.splice(startIndex, 1);
+      cols.splice(endIndex, 0, moved);
+      return cols;
+    });
+  };
+
   const updateTodo = (id: string, title: string) => {
     setTodos(p => p.map(t => (t.id === id ? { ...t, title } : t)));
   };
@@ -253,6 +264,7 @@ export const TodoContextProvider = ({ children }: { children: ReactNode }) => {
         removeTodo,
         updateTodo,
         reorderTodos,
+        reorderColumns,
         setSearchQuery,
         searchQuery,
         filter,

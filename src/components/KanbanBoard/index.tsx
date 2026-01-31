@@ -1,6 +1,6 @@
 import { useTodo } from '@/context/todoContext';
 import { Column } from '@/components/Column';
-import { useTodoMonitor } from '@/hooks/useTodoDnD';
+import { useTodoMonitor } from '@/hooks/useDnD';
 
 export const KanbanBoard = () => {
   const {
